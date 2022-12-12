@@ -13,48 +13,6 @@
 --
 -------------------------------------------------------------
 --
-DROP FUNCTION IF EXISTS nb_country_locations CASCADE;
-
---
--------------------------------------------------------------
---
-CREATE FUNCTION nb_country_locations (in_c_name varchar(70))
-    RETURNS numeric
-    AS $$
-BEGIN
-    RETURN (
-        SELECT
-            count(*)
-        FROM
-            location
-        WHERE
-            c_name = in_c_name);
-END
-$$
-LANGUAGE plpgsql;
-
-CREATE FUNCTION check_if_skiper_is_authorized (in_c_name, in_b_cni, in_di_start_date, in_di_end_date, in_s_mail)
-    RETURNS boolean
-    AS $$
-BEGIN
-    RETURN EXISTS (
-        SELECT
-            *
-        FROM
-            authorised
-        WHERE
-            c_name = in_c_name
-            AND b_cni = in_b_cni
-            AND di_start_date = in_di_start_date
-            AND di_end_date = in_di_end_date
-            AND s_mail = in_s_mail);
-END
-$$
-LANGUAGE plpgsql;
-
---
--------------------------------------------------------------
---
 DROP TABLE IF EXISTS country CASCADE;
 
 DROP TABLE IF EXISTS location CASCADE;
@@ -99,12 +57,13 @@ CREATE TABLE location (
     name varchar(80) NOT NULL,
     CONSTRAINT pk_location PRIMARY KEY (latitude, longitude),
     CONSTRAINT fk_location_country FOREIGN KEY (c_name) REFERENCES country (name)
+    -- (IC-2) Any two locations must be at least one nautical mile apart
 );
 
 CREATE TABLE sailor (
     email varchar(254),
-    surname varchar(40) NOT NULL,
     first_name varchar(40) NOT NULL,
+    surname varchar(40) NOT NULL,
     CONSTRAINT pk_sailor PRIMARY KEY (email)
     -- Every sailor must exist either in the table 'senior' or
     -- in the table 'junior', but never in both at the same time
@@ -130,22 +89,23 @@ CREATE TABLE boat_class (
 
 CREATE TABLE boat (
     c_name varchar(70),
-    cni varchar(20),
+    cni varchar(15),
     bc_name varchar(80) NOT NULL,
     name varchar(80) NOT NULL,
     length numeric(5, 2) NOT NULL,
     year numeric(4, 0) NOT NULL,
     CONSTRAINT pk_boat PRIMARY KEY (c_name, cni),
     CONSTRAINT fk_boat_country FOREIGN KEY (c_name) REFERENCES country (name),
-    CONSTRAINT fk_boat_boat_class FOREIGN KEY (bc_name) REFERENCES boat_class (name),
-    CONSTRAINT ck_boat_country_has_locations CHECK (nb_country_locations (c_name) > 0)
+    CONSTRAINT fk_boat_boat_class FOREIGN KEY (bc_name) REFERENCES boat_class (name)
+    -- (IC-1) The country where the boat is registered must have at the least one location associated with it
+    -- CONSTRAINT ck_boat_country_has_locations CHECK (ic1 (c_name) > 0)
 );
 
 CREATE TABLE sailing_certificate (
     s_email varchar(254),
     issue_date date,
-    bc_name varchar(80) NOT NULL,
     expiry_date date NOT NULL,
+    bc_name varchar(80) NOT NULL,
     CONSTRAINT pk_sailing_certificate PRIMARY KEY (s_email, issue_date),
     CONSTRAINT fk_sailing_certificate_sailor FOREIGN KEY (s_email) REFERENCES sailor (email),
     CONSTRAINT fk_sailing_certificate_boat_class FOREIGN KEY (bc_name) REFERENCES boat_class (name)
@@ -178,6 +138,7 @@ CREATE TABLE reservation (
     CONSTRAINT fk_reservation_date_interval FOREIGN KEY (di_start_date, di_end_date) REFERENCES date_interval (start_date, end_date),
     CONSTRAINT fk_reservation_senior FOREIGN KEY (s_email) REFERENCES senior (s_email)
     -- Every reservation must exist in the table 'authorised'
+    -- (IC-6) s_email must exist in the table 'authorized', where it must be associated with the reservation, and must exist in the table 'senior'
 );
 
 CREATE TABLE authorised (
@@ -210,6 +171,7 @@ CREATE TABLE trip (
     CONSTRAINT fk_trip_to_location FOREIGN KEY (to_l_latitude, to_l_longitude) REFERENCES location (latitude, longitude),
     CONSTRAINT fk_trip_from_location FOREIGN KEY (from_l_latitude, from_l_longitude) REFERENCES location (latitude, longitude),
     CONSTRAINT ck_trip_take_off_after_reservation_start_date CHECK (take_off >= di_start_date)
+    -- (IC-3) s_email must exist in the table 'authorized', where it must be associated with the same reservation as the trip
 );
 
 ------------- POPULATE THE DATA BASE ------------

@@ -1,32 +1,116 @@
+DELETE FROM trip;
+DELETE FROM authorised;
+DELETE FROM reservation;
+DELETE FROM date_interval;
+DELETE FROM valid_for;
+DELETE FROM sailing_certificate;
+DELETE FROM boat;
+DELETE FROM boat_class;
+DELETE FROM senior;
+DELETE FROM junior;
+DELETE FROM sailor;
+DELETE FROM location;
+DELETE FROM country;
+
+
+-- poupulate country
 INSERT INTO country
-  VALUES ('test_country1', 'url:flag', 'PR1');
+VALUES 
+  ('Portugal', 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Portugal.svg/255px-Flag_of_Portugal.svg.png', 'PRT'), 
+  ('Espanha', 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png', 'ESP'), 
+  ('França', 'https://pt.wikipedia.org/wiki/Fran%C3%A7a#/media/Ficheiro:Flag_of_France_(1794%E2%80%931815,_1830%E2%80%931974,_2020%E2%80%93present).svg', 'FRA');
 
-INSERT INTO boat_class
-  VALUES ('test_class', 425.00);
-
+-- populate location
 INSERT INTO location
-  VALUES (1.0, 1.0, 'test_country', 'test_location');
+VALUES 
+  (10, 10, 'Portugal', 'Madeira'),
+  (-10, -10, 'Portugal', 'Açores'),
+  (0, 0, 'Portugal', 'Lisboa'),
+  (0, 10, 'Portugal', 'Berlengas');
 
+-- popuate sailor
+INSERT INTO sailor
+VALUES
+  ('bruno.m.cebola@tecnico.ulisboa.pt', 'Bruno', 'Cebola'),
+  ('joao.pedro.nunes@tecnico.ulisboa.pt', 'João', 'Nunes'),
+  ('rui.abrantes@tecnico.ulisboa.pt', 'Rui', 'Abrantes');
+
+-- popuate junior
+INSERT INTO junior
+VALUES
+  ('joao.pedro.nunes@tecnico.ulisboa.pt'),
+  ('rui.abrantes@tecnico.ulisboa.pt');
+
+-- populates senior
+INSERT INTO senior
+VALUES
+  ('bruno.m.cebola@tecnico.ulisboa.pt');
+
+-- populate boat_class
+INSERT INTO boat_class
+VALUES
+  ('Lancha', 10.50),
+  ('Catamaran', 25.25);
+
+
+-- populate boat
 INSERT INTO boat
-  VALUES ('test_country1', 'abd-87r-9ht', 'test_class', 'test_boat', 200, 2000);
+VALUES  
+  ('Portugal', 'AXZ-879-145-TVC', 'Lancha', 'Barco 1', 10, 2022),
+  ('Portugal', '689-FEK-325-NKE', 'Lancha', 'Barco 2', 7.5, 2020),
+  ('França', 'BTH-UJN-552-829', 'Catamaran', 'Barco 3', 20, 2015),
+  ('Espanha', 'RIM-473-FEW-315', 'Catamaran', 'Barco 4', 25, 2018);
 
-SELECT
-  *
-FROM
-  country;
+-- populate sailing_certificate
+INSERT INTO sailing_certificate
+VALUES
+  ('bruno.m.cebola@tecnico.ulisboa.pt', '01-01-2021', '31-12-2023', 'Lancha'),
+  ('bruno.m.cebola@tecnico.ulisboa.pt', '02-01-2021', '31-12-2023', 'Catamaran');
 
-SELECT
-  *
-FROM
-  boat_class;
+-- populate valid_for
+INSERT INTO valid_for
+VALUES
+  ('Portugal', 'bruno.m.cebola@tecnico.ulisboa.pt', '01-01-2021'),
+  ('Espanha', 'bruno.m.cebola@tecnico.ulisboa.pt', '01-01-2021'),
+  ('França', 'bruno.m.cebola@tecnico.ulisboa.pt', '01-01-2021'),
+  ('Portugal', 'bruno.m.cebola@tecnico.ulisboa.pt', '02-01-2021');
 
-SELECT
-  *
-FROM
-  location;
+-- populate date_interval
+INSERT INTO date_interval
+VALUES
+  ('01-12-2022', '07-12-2022'),
+  ('08-12-2022', '15-12-2022');
 
-SELECT
-  *
-FROM
-  boat;
+-- populate reservation
+INSERT INTO reservation
+VALUES
+  ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
+  ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt');
 
+-- populate authorised
+INSERT INTO authorised
+VALUES
+  ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
+  ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'joao.pedro.nunes@tecnico.ulisboa.pt'),
+  ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
+  ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'rui.abrantes@tecnico.ulisboa.pt');
+
+-- populate trip
+INSERT INTO trip
+VALUES
+  ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', '01-12-2022', '03-12-2022', 'VR7NVNVEW7NWK330W', 'joao.pedro.nunes@tecnico.ulisboa.pt', 0, 0, 10, 10),
+  ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', '04-12-2022', '07-12-2022', 'VR7NVNVEW7NWK330W', 'joao.pedro.nunes@tecnico.ulisboa.pt', 10, 10, 0, 0);
+
+SELECT * FROM country;
+SELECT * FROM location;
+SELECT * FROM sailor;
+SELECT * FROM junior;
+SELECT * FROM senior;
+SELECT * FROM boat_class;
+SELECT * FROM boat;
+SELECT * FROM sailing_certificate;
+SELECT * FROM valid_for;
+SELECT * FROM date_interval;
+SELECT * FROM reservation;
+SELECT * FROM authorised;
+SELECT * FROM trip;
