@@ -103,7 +103,6 @@ CREATE TABLE boat (
     CONSTRAINT fk_boat_country FOREIGN KEY (c_name) REFERENCES country (name),
     CONSTRAINT fk_boat_boat_class FOREIGN KEY (bc_name) REFERENCES boat_class (name)
     -- (IC-1) The country where the boat is registered must have at the least one location associated with it
-    -- CONSTRAINT ck_boat_country_has_locations CHECK (ic1 (c_name) > 0)
 );
 
 CREATE TABLE sailing_certificate (
@@ -143,7 +142,7 @@ CREATE TABLE reservation (
     CONSTRAINT fk_reservation_date_interval FOREIGN KEY (di_start_date, di_end_date) REFERENCES date_interval (start_date, end_date),
     CONSTRAINT fk_reservation_senior FOREIGN KEY (s_email) REFERENCES senior (s_email)
     -- Every reservation must exist in the table 'authorised'
-    -- (IC-6) s_email must exist in the table 'authorized', where it must be associated with the reservation, and must exist in the table 'senior'
+    -- (IC-6) s_email must exist in the table 'authorized', where it must be associated with its reservation, and must also exist in the table 'senior'
 );
 
 CREATE TABLE authorised (
@@ -176,6 +175,6 @@ CREATE TABLE trip (
     CONSTRAINT fk_trip_to_location FOREIGN KEY (to_l_latitude, to_l_longitude) REFERENCES location (latitude, longitude),
     CONSTRAINT fk_trip_from_location FOREIGN KEY (from_l_latitude, from_l_longitude) REFERENCES location (latitude, longitude),
     CONSTRAINT ck_trip_take_off_after_reservation_start_date CHECK (take_off >= di_start_date)
-    -- (IC-3) s_email must exist in the table 'authorized', where it must be associated with the same reservation as the trip
+    -- (IC-3) s_email must exist in the table 'authorised', where it must be associated with the same reservation as the trip
 );
 
