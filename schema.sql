@@ -12,10 +12,10 @@
 --
 -- Named constraints are global to the database.
 -- Therefore the following use the following naming rules:
---   1. pk_table for names of primary key constraints
---   2. fk_table_another for names of foreign key constraints
---   3. ck_table_description for names of check contrains
---   4. uk_table_field for names of unique constrains
+--   1. primary key - pk_current_table
+--   2. foreign key - fk_current_table_reference_table
+--   3. check - ck_current_table_description
+--   4. unique - uk_current_table_field 
 --
 -------------------------------------------------------------
 --
