@@ -1,0 +1,33 @@
+-- (A) The name of all boats that are used in some trip
+--
+  name   
+---------
+ Barco 1
+ Barco 2
+ Barco 3
+(3 rows)
+
+-- (B) The name of all boat that are not used in any trip
+--
+  name   
+---------
+ Barco 4
+(1 row)
+
+-- (C) The name of all boats registered in 'PRT' for which at least one
+-- responsible for a reservation has a surname that ends with 'Santos'
+--
+  name   
+---------
+ Barco 1
+(1 row)
+
+-- (D) The full name of all skippers without any certification
+-- corresponding to the class of the trip's boat
+--
+  full_name   
+--------------
+ Bruno Cebola
+ Rui Abrantes
+ João Nunes
+(3 rows)
