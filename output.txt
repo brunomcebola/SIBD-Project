@@ -1,3 +1,14 @@
+-------------------------------------------------------------
+--
+-- SIBD Project - Part 2
+--
+-- Bruno Cebola - 93030
+-- João Nunes - 93100
+-- Rui Abrantes - 93176
+--
+---------------------- DATABASE OUTPUT --------------------
+--
+
 -- (A) The name of all boats that are used in some trip
 --
   name   

@@ -1,4 +1,10 @@
--- Project Part II
+-------------------------------------------------------------
+--
+-- SIBD Project - Part 2
+--
+-- Bruno Cebola - 93030
+-- João Nunes - 93100
+-- Rui Abrantes - 93176
 --
 ---------------------- DATABASE SCHEMA ----------------------
 --
@@ -38,7 +44,6 @@ DROP TABLE IF EXISTS reservation CASCADE;
 DROP TABLE IF EXISTS authorised CASCADE;
 
 DROP TABLE IF EXISTS trip CASCADE;
-
 --
 -------------------------------------------------------------
 --

@@ -1,3 +1,13 @@
+-------------------------------------------------------------
+--
+-- SIBD Project - Part 2
+--
+-- Bruno Cebola - 93030
+-- João Nunes - 93100
+-- Rui Abrantes - 93176
+--
+---------------------- DATABASE POPULATE --------------------
+--
 DELETE FROM trip;
 DELETE FROM authorised;
 DELETE FROM reservation;
@@ -11,8 +21,9 @@ DELETE FROM junior;
 DELETE FROM sailor;
 DELETE FROM location;
 DELETE FROM country;
-
-
+--
+-------------------------------------------------------------
+--
 -- poupulate country
 INSERT INTO country
 VALUES 
@@ -108,17 +119,3 @@ VALUES
   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', '08-12-2022', '11-12-2022', 'KJBRWV88R43NFO348', 'bruno.m.cebola@tecnico.ulisboa.pt', 10, 10, -10, -10),
   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', '12-12-2022', '15-12-2022', 'KJBRWV88R43NFO348', 'rui.abrantes@tecnico.ulisboa.pt', -10, -10, 10, 10),
   ('França', 'BTH-UJN-552-829', '08-12-2022', '15-12-2022', '08-12-2022', '15-12-2022', 'NL43KGJKNT5LRN4OJ', 'pedro.santos@tecnico.ulisboa.pt', 0, 0, 0, 10);
-
-SELECT * FROM country;
-SELECT * FROM location;
-SELECT * FROM sailor;
-SELECT * FROM junior;
-SELECT * FROM senior;
-SELECT * FROM boat_class;
-SELECT * FROM boat;
-SELECT * FROM sailing_certificate;
-SELECT * FROM valid_for;
-SELECT * FROM date_interval;
-SELECT * FROM reservation;
-SELECT * FROM authorised;
-SELECT * FROM trip;
