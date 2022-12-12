@@ -33,7 +33,8 @@ INSERT INTO sailor
 VALUES
   ('bruno.m.cebola@tecnico.ulisboa.pt', 'Bruno', 'Cebola'),
   ('joao.pedro.nunes@tecnico.ulisboa.pt', 'João', 'Nunes'),
-  ('rui.abrantes@tecnico.ulisboa.pt', 'Rui', 'Abrantes');
+  ('rui.abrantes@tecnico.ulisboa.pt', 'Rui', 'Abrantes'),
+  ('pedro.santos@tecnico.ulisboa.pt', 'Pedro', 'Santos');
 
 -- popuate junior
 INSERT INTO junior
@@ -44,7 +45,8 @@ VALUES
 -- populates senior
 INSERT INTO senior
 VALUES
-  ('bruno.m.cebola@tecnico.ulisboa.pt');
+  ('bruno.m.cebola@tecnico.ulisboa.pt'),
+  ('pedro.santos@tecnico.ulisboa.pt');
 
 -- populate boat_class
 INSERT INTO boat_class
@@ -64,7 +66,7 @@ VALUES
 -- populate sailing_certificate
 INSERT INTO sailing_certificate
 VALUES
-  ('bruno.m.cebola@tecnico.ulisboa.pt', '01-01-2021', '31-12-2023', 'Lancha'),
+  ('pedro.santos@tecnico.ulisboa.pt', '01-01-2021', '31-12-2023', 'Catamaran'),
   ('bruno.m.cebola@tecnico.ulisboa.pt', '02-01-2021', '31-12-2023', 'Catamaran');
 
 -- populate valid_for
@@ -85,6 +87,8 @@ VALUES
 INSERT INTO reservation
 VALUES
   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
+  ('Portugal', 'AXZ-879-145-TVC', '08-12-2022', '15-12-2022', 'pedro.santos@tecnico.ulisboa.pt'),
+  ('França', 'BTH-UJN-552-829', '08-12-2022', '15-12-2022', 'pedro.santos@tecnico.ulisboa.pt'),
   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt');
 
 -- populate authorised
@@ -93,13 +97,17 @@ VALUES
   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'joao.pedro.nunes@tecnico.ulisboa.pt'),
   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
-  ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'rui.abrantes@tecnico.ulisboa.pt');
+  ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'rui.abrantes@tecnico.ulisboa.pt'),
+  ('França', 'BTH-UJN-552-829', '08-12-2022', '15-12-2022', 'pedro.santos@tecnico.ulisboa.pt');
 
 -- populate trip
 INSERT INTO trip
 VALUES
   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', '01-12-2022', '03-12-2022', 'VR7NVNVEW7NWK330W', 'joao.pedro.nunes@tecnico.ulisboa.pt', 0, 0, 10, 10),
-  ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', '04-12-2022', '07-12-2022', 'VR7NVNVEW7NWK330W', 'joao.pedro.nunes@tecnico.ulisboa.pt', 10, 10, 0, 0);
+  ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', '04-12-2022', '07-12-2022', 'VR7NVNVEW7NWK330W', 'joao.pedro.nunes@tecnico.ulisboa.pt', 10, 10, 0, 0),
+  ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', '08-12-2022', '11-12-2022', 'KJBRWV88R43NFO348', 'bruno.m.cebola@tecnico.ulisboa.pt', 10, 10, -10, -10),
+  ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', '12-12-2022', '15-12-2022', 'KJBRWV88R43NFO348', 'rui.abrantes@tecnico.ulisboa.pt', -10, -10, 10, 10),
+  ('França', 'BTH-UJN-552-829', '08-12-2022', '15-12-2022', '08-12-2022', '15-12-2022', 'NL43KGJKNT5LRN4OJ', 'pedro.santos@tecnico.ulisboa.pt', 0, 0, 0, 10);
 
 SELECT * FROM country;
 SELECT * FROM location;

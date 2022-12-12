@@ -174,10 +174,3 @@ CREATE TABLE trip (
     -- (IC-3) s_email must exist in the table 'authorized', where it must be associated with the same reservation as the trip
 );
 
-------------- POPULATE THE DATA BASE ------------
--- Inserts Basically
-------------- SIMPLE SQL QUERIES ----------------
--- The name of all boats that are used in some trip.
--- The name of all boats that are not used in any trip
--- The name of all boats registered in 'PRT' (ISO code) for which at least one responsible for a reservation has a surname that ends with 'Santos
--- The full name of all skipper without any certificate corresponding to the class of the trip's boat
