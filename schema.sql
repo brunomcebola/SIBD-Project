@@ -1,180 +1,170 @@
--------------------------------------------------------------
---
--- SIBD Project - Part 2
---
--- Bruno Cebola - 93030
--- João Nunes - 93100
--- Rui Abrantes - 93176
---
----------------------- DATABASE SCHEMA ----------------------
---
--- Note:
---
--- Named constraints are global to the database.
--- Therefore the following use the following naming rules:
---   1. primary key - pk_current_table
---   2. foreign key - fk_current_table_reference_table
---   3. check - ck_current_table_description
---   4. unique - uk_current_table_field 
---
--------------------------------------------------------------
---
-DROP TABLE IF EXISTS country CASCADE;
+DROP TABLE IF EXISTS trip;
+DROP TABLE IF EXISTS authorised;
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS date_interval;
+DROP TABLE IF EXISTS boat;
+DROP TABLE IF EXISTS valid_for;
+DROP TABLE IF EXISTS sailing_certificate;
+DROP TABLE IF EXISTS boat_class;
+DROP TABLE IF EXISTS senior;
+DROP TABLE IF EXISTS junior;
+DROP TABLE IF EXISTS sailor;
+DROP TABLE IF EXISTS location;
+DROP TABLE IF EXISTS country;
 
-DROP TABLE IF EXISTS location CASCADE;
-
-DROP TABLE IF EXISTS sailor CASCADE;
-
-DROP TABLE IF EXISTS junior CASCADE;
-
-DROP TABLE IF EXISTS senior CASCADE;
-
-DROP TABLE IF EXISTS boat_class CASCADE;
-
-DROP TABLE IF EXISTS boat CASCADE;
-
-DROP TABLE IF EXISTS sailing_certificate CASCADE;
-
-DROP TABLE IF EXISTS valid_for CASCADE;
-
-DROP TABLE IF EXISTS date_interval CASCADE;
-
-DROP TABLE IF EXISTS reservation CASCADE;
-
-DROP TABLE IF EXISTS authorised CASCADE;
-
-DROP TABLE IF EXISTS trip CASCADE;
---
--------------------------------------------------------------
---
-CREATE TABLE country (
-    name varchar(70),
-    flag varchar(2083) NOT NULL,
-    iso_code varchar(3) NOT NULL,
-    CONSTRAINT pk_country PRIMARY KEY (name),
-    CONSTRAINT uk_country_iso_code UNIQUE (iso_code)
+CREATE TABLE country(
+	iso_code    CHAR(3) NOT NULL,
+	flag        VARCHAR(100) NOT NULL,
+	name        VARCHAR(70),
+	PRIMARY KEY (name),
+	UNIQUE (iso_code)
 );
 
-CREATE TABLE location (
-    latitude numeric(8, 6),
-    longitude numeric(9, 6),
-    c_name varchar(70) NOT NULL,
-    name varchar(80) NOT NULL,
-    CONSTRAINT pk_location PRIMARY KEY (latitude, longitude),
-    CONSTRAINT fk_location_country FOREIGN KEY (c_name) REFERENCES country (name)
-    -- (IC-2) Any two locations must be at least one nautical mile apart
+CREATE TABLE location(
+	latitude        NUMERIC(8,6),
+	longitude       NUMERIC(9,6),
+	name            VARCHAR(80) NOT NULL,
+	country_name    VARCHAR(70) NOT NULL,
+	PRIMARY KEY (latitude, longitude),
+	FOREIGN KEY (country_name) REFERENCES country(name)
+
+    -- (IC-1) Every country where boats can be registered must have at least one location.
+
+	-- (IC-2) The 'latitude' and 'longitude' of any row in the table 'location' must
+	-- be at least 1-mile distance apart from 'latitude' and 'longitude' of all other rows.
 );
 
-CREATE TABLE sailor (
-    email varchar(254),
-    first_name varchar(40) NOT NULL,
-    surname varchar(40) NOT NULL,
-    CONSTRAINT pk_sailor PRIMARY KEY (email)
-    -- Every sailor must exist either in the table 'senior' or
-    -- in the table 'junior', but never in both at the same time
+CREATE TABLE sailor(
+	firstname   VARCHAR(60) NOT NULL,
+	surname     VARCHAR(60) NOT NULL,
+	email       VARCHAR(100),
+	PRIMARY KEY (email)
+    -- mandatory specialization of sailor: any row must correspond to a row in junior or senior
 );
 
-CREATE TABLE junior (
-    s_email varchar(254),
-    CONSTRAINT pk_junior PRIMARY KEY (s_email),
-    CONSTRAINT fk_junior_sailor FOREIGN KEY (s_email) REFERENCES sailor (email)
+CREATE TABLE junior(
+	email   VARCHAR(100),
+	PRIMARY KEY (email),
+    FOREIGN KEY (email) REFERENCES sailor(email)
+    -- disjoint specialization of sailor: any row must not correspond to a row in senior
+    -- mandatory specialization of sailor: any row in sailor must correspond to a row in junior or senior
 );
 
-CREATE TABLE senior (
-    s_email varchar(254),
-    CONSTRAINT pk_senior PRIMARY KEY (s_email),
-    CONSTRAINT fk_senior_sailor FOREIGN KEY (s_email) REFERENCES sailor (email)
+CREATE TABLE senior(
+	email   VARCHAR(100),
+	PRIMARY KEY (email),
+    FOREIGN KEY (email) REFERENCES sailor(email)
+    -- disjoint specialization of sailor: any row must not correspond to a row in junior
+    -- mandatory specialization of sailor: any row in sailor must correspond to a row in junior or senior
 );
 
-CREATE TABLE boat_class (
-    name varchar(80),
-    max_length numeric(5, 2) NOT NULL,
-    CONSTRAINT pk_boat_class PRIMARY KEY (name)
+CREATE TABLE boat_class(
+	name        VARCHAR(50),
+	max_length  NUMERIC(5,2) NOT NULL,
+	PRIMARY KEY (name)
 );
 
-CREATE TABLE boat (
-    c_name varchar(70),
-    cni varchar(15),
-    bc_name varchar(80) NOT NULL,
-    name varchar(80) NOT NULL,
-    length numeric(5, 2) NOT NULL,
-    year numeric(4, 0) NOT NULL,
-    CONSTRAINT pk_boat PRIMARY KEY (c_name, cni),
-    CONSTRAINT fk_boat_country FOREIGN KEY (c_name) REFERENCES country (name),
-    CONSTRAINT fk_boat_boat_class FOREIGN KEY (bc_name) REFERENCES boat_class (name)
-    -- (IC-1) The country where the boat is registered must have at the least one location associated with it
+CREATE TABLE sailing_certificate(
+	issue_date      TIMESTAMP,
+	expiry_date     TIMESTAMP NOT NULL,
+	sailor          VARCHAR(100),
+	boat_class      VARCHAR(50) NOT NULL,
+	PRIMARY KEY (sailor, issue_date),
+	FOREIGN KEY(sailor) REFERENCES sailor(email),
+	FOREIGN KEY(boat_class) REFERENCES boat_class(name)
+
+    -- mandatory participation: any row of sailing_certificate must have
+    -- at least one corresponding row in valid_for
 );
 
-CREATE TABLE sailing_certificate (
-    s_email varchar(254),
-    issue_date date,
-    expiry_date date NOT NULL,
-    bc_name varchar(80) NOT NULL,
-    CONSTRAINT pk_sailing_certificate PRIMARY KEY (s_email, issue_date),
-    CONSTRAINT fk_sailing_certificate_sailor FOREIGN KEY (s_email) REFERENCES sailor (email),
-    CONSTRAINT fk_sailing_certificate_boat_class FOREIGN KEY (bc_name) REFERENCES boat_class (name)
-    -- Every sailing certificate must exist in the table 'valid_for'
+CREATE TABLE valid_for(
+	country_name    VARCHAR(70),
+	max_length      NUMERIC(5,2) NOT NULL,
+	sailor          VARCHAR(100),
+	issue_date      TIMESTAMP,
+	PRIMARY KEY (country_name, sailor, issue_date),
+	FOREIGN KEY (sailor, issue_date) REFERENCES sailing_certificate(sailor, issue_date),
+    FOREIGN KEY (country_name) REFERENCES country(name)
+    -- mandatory participation: any row of sailing_certificate must have
+    -- at least one corresponding row in valid_for
 );
 
-CREATE TABLE valid_for (
-    c_name varchar(70),
-    s_email varchar(254),
-    sc_issue_date date,
-    CONSTRAINT pk_valid_for PRIMARY KEY (c_name, s_email, sc_issue_date),
-    CONSTRAINT fk_valid_for_country FOREIGN KEY (c_name) REFERENCES country (name),
-    CONSTRAINT fk_valid_for_sailing_certificate FOREIGN KEY (s_email, sc_issue_date) REFERENCES sailing_certificate (s_email, issue_date)
+CREATE TABLE boat(
+    country     VARCHAR(70),
+    year        INTEGER NOT NULL,
+	cni         VARCHAR(17),
+	name        VARCHAR(30) NOT NULL,
+	length      NUMERIC(5,2) NOT NULL,
+	boat_class  VARCHAR(20) NOT NULL,
+	PRIMARY KEY(country, cni),
+	FOREIGN KEY(country) REFERENCES country(name),
+	FOREIGN KEY(boat_class) REFERENCES boat_class(name)
+
+    -- (IC-1) Every country where boats can be registered must have at least one location.
 );
 
-CREATE TABLE date_interval (
-    start_date date,
-    end_date date,
-    CONSTRAINT pk_date_interval PRIMARY KEY (start_date, end_date)
+CREATE TABLE date_interval(
+    start_date DATE,
+    end_date   DATE,
+    PRIMARY KEY (start_date, end_date)
 );
 
-CREATE TABLE reservation (
-    c_name varchar(70),
-    b_cni varchar(20),
-    di_start_date date,
-    di_end_date date,
-    s_email varchar(254) NOT NULL,
-    CONSTRAINT pk_reservation PRIMARY KEY (c_name, b_cni, di_start_date, di_end_date),
-    CONSTRAINT fk_reservation_boat FOREIGN KEY (c_name, b_cni) REFERENCES boat (c_name, cni),
-    CONSTRAINT fk_reservation_date_interval FOREIGN KEY (di_start_date, di_end_date) REFERENCES date_interval (start_date, end_date),
-    CONSTRAINT fk_reservation_senior FOREIGN KEY (s_email) REFERENCES senior (s_email)
-    -- Every reservation must exist in the table 'authorised'
-    -- (IC-6) s_email must exist in the table 'authorized', where it must be associated with its reservation, and must also exist in the table 'senior'
+CREATE TABLE reservation(
+    start_date          DATE,
+    end_date            DATE,
+    country             VARCHAR(70),
+	cni                 VARCHAR(17),
+	responsible         VARCHAR(50) NOT NULL,
+    PRIMARY KEY(start_date, end_date, country, cni),
+    FOREIGN KEY(country, cni) REFERENCES boat(country, cni),
+    FOREIGN KEY(start_date, end_date) REFERENCES date_interval(start_date, end_date),
+    FOREIGN KEY(responsible) REFERENCES senior(email)
+
+    -- (IC-6) One of the senior authorized sailors must be the responsible for a reservation.
 );
 
-CREATE TABLE authorised (
-    c_name varchar(70),
-    b_cni varchar(20),
-    di_start_date date,
-    di_end_date date,
-    s_email varchar(254),
-    CONSTRAINT pk_authorised PRIMARY KEY (c_name, b_cni, di_start_date, di_end_date, s_email),
-    CONSTRAINT fk_authorised_reservation FOREIGN KEY (c_name, b_cni, di_start_date, di_end_date) REFERENCES reservation (c_name, b_cni, di_start_date, di_end_date),
-    CONSTRAINT fk_authorised_sailor FOREIGN KEY (s_email) REFERENCES sailor (email)
+CREATE TABLE authorised(
+    start_date      DATE,
+    end_date        DATE,
+    boat_country    VARCHAR(70),
+    cni             VARCHAR(17),
+    sailor          VARCHAR(50),
+    PRIMARY KEY (start_date, end_date, boat_country, cni, sailor),
+    FOREIGN KEY (start_date, end_date, boat_country, cni) REFERENCES reservation (start_date, end_date, country, cni),
+    FOREIGN KEY (sailor) REFERENCES sailor (email)
+
+    -- mandatory participation: any row of reservation must have
+    -- at least one corresponding row in authorised
+
+    -- (IC-3) The skipper must be an authorized sailor of the corresponding reservation.
+
+    -- (IC-6) One of the senior authorized sailors must be the responsible for a reservation.
 );
 
-CREATE TABLE trip (
-    c_name varchar(70),
-    b_cni varchar(20),
-    di_start_date date,
-    di_end_date date,
-    take_off date,
-    arrival date NOT NULL,
-    insurance varchar(80) NOT NULL,
-    s_email varchar(254) NOT NULL,
-    to_l_latitude numeric(8, 6) NOT NULL,
-    to_l_longitude numeric(9, 6) NOT NULL,
-    from_l_latitude numeric(8, 6) NOT NULL,
-    from_l_longitude numeric(9, 6) NOT NULL,
-    CONSTRAINT pk_trip PRIMARY KEY (c_name, b_cni, di_start_date, di_end_date, take_off),
-    CONSTRAINT fk_trip_reservation FOREIGN KEY (c_name, b_cni, di_start_date, di_end_date) REFERENCES reservation (c_name, b_cni, di_start_date, di_end_date),
-    CONSTRAINT fk_trip_sailor FOREIGN KEY (s_email) REFERENCES sailor (email),
-    CONSTRAINT fk_trip_to_location FOREIGN KEY (to_l_latitude, to_l_longitude) REFERENCES location (latitude, longitude),
-    CONSTRAINT fk_trip_from_location FOREIGN KEY (from_l_latitude, from_l_longitude) REFERENCES location (latitude, longitude),
-    CONSTRAINT ck_trip_take_off_after_reservation_start_date CHECK (take_off >= di_start_date)
-    -- (IC-3) s_email must exist in the table 'authorised', where it must be associated with the same reservation as the trip
+CREATE TABLE trip(
+    takeoff                 DATE,
+    arrival                 DATE NOT NULL,
+    insurance               VARCHAR(50) NOT NULL,
+    from_latitude           NUMERIC(8,6) NOT NULL,
+    from_longitude          NUMERIC(9,6) NOT NULL,
+    to_latitude             NUMERIC(8,6) NOT NULL,
+    to_longitude            NUMERIC(9,6) NOT NULL,
+    skipper                 VARCHAR(50) NOT NULL,
+    reservation_start_date  DATE,
+    reservation_end_date    DATE,
+    boat_country            VARCHAR(70),
+    cni                     VARCHAR(17),
+    PRIMARY KEY (takeoff, reservation_start_date, reservation_end_date, boat_country, cni),
+    FOREIGN KEY (reservation_start_date, reservation_end_date, boat_country, cni)
+        REFERENCES reservation (start_date, end_date, country, cni),
+    FOREIGN KEY (skipper) REFERENCES sailor (email),
+    FOREIGN KEY(from_latitude,from_longitude) REFERENCES location(latitude,longitude),
+    FOREIGN KEY(to_latitude,to_longitude) REFERENCES location(latitude,longitude),
+    CHECK (takeoff >= reservation_start_date) -- (IC-4)
+
+    -- (IC-3) The skipper must be an authorized sailor of the corresponding reservation.
 );
+
+
+
 

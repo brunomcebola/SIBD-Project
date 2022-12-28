@@ -1,8 +1,12 @@
--- Project Part II
---
----------------------- DATABASE FUNCTIONS -------------------
---
 -------------------------------------------------------------
+--
+-- SIBD Project - Part 2
+--
+-- Bruno Cebola - 93030
+-- João Nunes - 93100
+-- Rui Abrantes - 93176
+--
+--------------------- DATABASE FUNCTIONS --------------------
 --
 DROP FUNCTION IF EXISTS ic1 CASCADE;
 DROP FUNCTION IF EXISTS ic2 CASCADE;
