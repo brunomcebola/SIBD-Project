@@ -1,0 +1,20 @@
+#!/usr/bin/python3
+print('Content-type:text/html\n\n')
+print('<html>')
+print('<head>')
+print('<title>Reservation</title>')
+print('</head>')
+print('<body>')
+print('<h3>Create new Reservation')
+
+print('<form action="create_reservation.cgi" method="post">')
+print('<p>Start Date: <input type="text" name="start_date"/></p>')
+print('<p>End Date: <input type="text" name="end_date"/></p>')
+print('<p>Country: <input type="text" name="country"/></p>')
+print('<p>CNI: <input type="text" name="cni"/></p>')
+print('<p>Responsible Email: <input type="text" name="email"/></p>')
+print('<p><input type="submit" value="Submit"/></p>')
+print('</form>')
+
+print('</body>')
+print('</html>')

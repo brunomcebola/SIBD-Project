@@ -30,7 +30,7 @@ NATURAL JOIN (
 --
 -- 3) Who are the sailors that have sailed to every location in 'Portugal'?
 --
-
+-- TODO: use division
 --
 -- 4) List the sailors with the most skipped trips
 --
@@ -48,3 +48,6 @@ NATURAL JOIN (
 -- 5) List the sailors with the longest duration of trips (sum of trip durations) for the same
 --    single reservation; display also the sum of the trips duration
 --
+SELECT 
+FROM trip
+GROUP BY skipper
