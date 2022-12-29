@@ -29,34 +29,47 @@ COMMIT;
 --
 -------------------------------------------------------------
 --
-START TRANSACTION;
-SET CONSTRAINTS ALL DEFERRED;
 
-INSERT INTO sailor VALUES ('a', 'b', '1');
-INSERT INTO senior VALUES ('1');
 
-INSERT INTO sailor VALUES ('a', 'b', '2');
-INSERT INTO junior VALUES ('2');
-
-COMMIT;
-
-select email from sailor;
-select email as s_email from senior;
-select email as j_email from junior;
+-- INSERT INTO sailor VALUES ('a', 'b', '2');
+-- INSERT INTO junior VALUES ('2');
 
 
 -- START TRANSACTION;
 -- SET CONSTRAINTS ALL DEFERRED;
 
--- -- UPDATE senior SET email = 'bruno.j.cebola@tecnico.ulisboa.pt' WHERE email = 'bruno.s.cebola@tecnico.ulisboa.pt';
--- UPDATE junior SET email = 'bruno.s.cebola@tecnico.ulisboa.pt' WHERE email = 'bruno.j.cebola@tecnico.ulisboa.pt';
+-- DELETE FROM junior WHERE email = '2';
+-- UPDATE senior SET email = '3' WHERE email = '1';
+-- DELETE FROM sailor WHERE email = '1';
+-- DELETE FROM sailor WHERE email = '2';
+-- INSERT INTO senior VALUES ('2');
+
 
 -- COMMIT;
 
--- select * from sailor;
--- select * from junior;
--- select * from senior;
+-- select email from sailor;
+-- select email as s_email from senior;
+-- select email as j_email from junior;
 
+
+
+-- START TRANSACTION;
+-- SET CONSTRAINTS ALL DEFERRED;
+
+-- UPDATE senior SET email = 'bruno.j.cebola@tecnico.ulisboa.pt' WHERE email = 'bruno.s.cebola@tecnico.ulisboa.pt';
+-- UPDATE junior SET email = 'bruno.s.cebola@tecnico.ulisboa.pt' WHERE email = 'bruno.j.cebola@tecnico.ulisboa.pt';
+
+-- TODO: rever update
+
+-- DELETE FROM junior WHERE email = '2';
+-- UPDATE senior SET email = '2' WHERE email = '1';
+-- INSERT INTO junior VALUES ('1');
+
+-- COMMIT;
+
+-- select email from sailor;
+-- select email as s_email from senior;
+-- select email as j_email from junior;
 
 
 -- -- poupulate country
