@@ -23,8 +23,8 @@ HAVING COUNT(*) >= All (
 SELECT *
 FROM sailor s
 NATURAL JOIN (
-  select sailor as email
-  from sailing_certificate
+  SELECT sailor AS email
+  FROM sailing_certificate
   GROUP BY sailor
   HAVING COUNT(*) >= 2) sc;
 --
@@ -34,7 +34,16 @@ NATURAL JOIN (
 --
 -- 4) List the sailors with the most skipped trips
 --
-
+SELECT *
+FROM sailor s
+NATURAL JOIN (
+  SELECT skipper AS email
+  FROM trip
+  GROUP BY skipper
+  HAVING COUNT(*) >= All (
+    SELECT COUNT(*)
+    FROM trip
+    GROUP BY skipper)) sc;
 --
 -- 5) List the sailors with the longest duration of trips (sum of trip durations) for the same
 --    single reservation; display also the sum of the trips duration
