@@ -1,16 +1,13 @@
 -------------------------------------------------------------
 --
--- SIBD Project - Part 2
+-- SIBD Project - Part 3
 --
--- Bruno Cebola - 93030
--- João Nunes - 93100
--- Rui Abrantes - 93176
+-- Sailor 1 Senior - 93030
+-- Sailor 2 Senior - 93100
+-- Sailor 3 Junior - 93176
 --
----------------------- DATABASE POPULATE --------------------
+---------------------- DATABASE POPULATION --------------------
 --
-START TRANSACTION;
-SET CONSTRAINTS ALL DEFERRED;
-
 DELETE FROM trip;
 DELETE FROM authorised;
 DELETE FROM reservation;
@@ -24,146 +21,118 @@ DELETE FROM junior;
 DELETE FROM sailor;
 DELETE FROM location;
 DELETE FROM country;
-
-COMMIT;
 --
 -------------------------------------------------------------
 --
+-- poupulate country
+INSERT INTO country
+VALUES 
+  ('PRT', 'https://en.wikipedia.org/wiki/Flag_of_Portugal#/media/File:Flag_of_Portugal.svg', 'Portugal'), 
+  ('ESP', 'https://en.wikipedia.org/wiki/Flag_of_Spain#/media/File:Bandera_de_Espa%C3%B1a.svg', 'Espanha'), 
+  ('FRA', 'https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg', 'França');
 
+-- populate location
+INSERT INTO location
+VALUES 
+  (10, 10, 'Madeira', 'Portugal'),
+  (-10, -10, 'Açores', 'Portugal'),
+  (10, 0, 'Madrid', 'Espanha'),
+  (0, 10, 'Paris', 'França');
 
--- INSERT INTO sailor VALUES ('a', 'b', '2');
--- INSERT INTO junior VALUES ('2');
+-- populate sailor
+INSERT INTO sailor
+VALUES
+  ('Sailor 1', 'Senior', 'sailor.1.senior@mail.com'),
+  ('Sailor 2', 'Senior', 'sailor.2.senior@mail.com'),
+  ('Sailor 3', 'Junior', 'sailor.3.junior@mail.com'),
+  ('Sailor 4', 'Junior', 'sailor.4.junior@mail.com');
 
+-- populate junior
+INSERT INTO junior
+VALUES
+  ('sailor.3.junior@mail.com'),
+  ('sailor.4.junior@mail.com');
 
--- START TRANSACTION;
--- SET CONSTRAINTS ALL DEFERRED;
+-- populate senior
+INSERT INTO senior
+VALUES
+  ('sailor.1.senior@mail.com'),
+  ('sailor.2.senior@mail.com');
 
--- DELETE FROM junior WHERE email = '2';
--- UPDATE senior SET email = '3' WHERE email = '1';
--- DELETE FROM sailor WHERE email = '1';
--- DELETE FROM sailor WHERE email = '2';
--- INSERT INTO senior VALUES ('2');
+-- populate boat_class
+INSERT INTO boat_class
+VALUES
+  ('Class 1', 10.50),
+  ('Class 2', 25.25),
+  ('Class 3', 30.00);
 
+-- populate sailing_certificate
+INSERT INTO sailing_certificate
+VALUES
+  -- sailor 1
+  ('01-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.1.senior@mail.com', 'Class 1'),
+  ('02-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.1.senior@mail.com', 'Class 2'),
+  ('03-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.1.senior@mail.com', 'Class 3'),
+  -- sailor 2
+  ('01-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.2.senior@mail.com', 'Class 1'),
+  ('02-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.2.senior@mail.com', 'Class 2'),
+  -- sailor 3
+  ('01-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.3.junior@mail.com', 'Class 1'),
+  -- sailor 4
+  ('01-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.4.junior@mail.com', 'Class 1');
 
--- COMMIT;
+-- populate valid_for
+INSERT INTO valid_for
+VALUES
+  -- TODO: missing certificates
+  ('Espanha', 25.25, 'sailor.1.senior@mail.com', '01-01-2021 18:00:12'),
+  ('França', 25.25, 'sailor.1.senior@mail.com', '01-01-2021 18:00:12'),
+  ('Portugal', 25.25, 'sailor.1.senior@mail.com', '01-01-2021 18:00:12');
 
--- select email from sailor;
--- select email as s_email from senior;
--- select email as j_email from junior;
+-- populate boat
+INSERT INTO boat
+VALUES  
+  -- Portugal
+  ('Portugal', 2022, 'PT 1', 'Barco PT 1', 10, 'Class 1'),
+  ('Portugal', 2020, 'PT 2', 'Barco PT 2', 7.5, 'Class 1'),
+  -- França
+  ('França', 2015, 'FR 1', 'Barco FR 1', 20, 'Class 2'),
+  ('França', 2015, 'FR 2', 'Barco FR 2', 20, 'Class 2'),
+  -- Espanha
+  ('Espanha', 2018, 'ES 1', 'Barco ES 1', 25, 'Class 2');
 
+-- populate date_interval
+INSERT INTO date_interval
+VALUES
+  ('01-12-2022', '07-12-2022'),
+  ('08-12-2022', '14-12-2022');
 
+-- populate reservation
+INSERT INTO reservation
+VALUES
+  -- reserva 1
+  ('01-12-2022', '07-12-2022', 'Portugal', 'PT 1', 'sailor.1.senior@mail.com'),
+  -- reserva 2
+  ('08-12-2022', '14-12-2022', 'Portugal', 'PT 2', 'sailor.2.senior@mail.com');
 
--- START TRANSACTION;
--- SET CONSTRAINTS ALL DEFERRED;
+-- populate authorised
+INSERT INTO authorised
+VALUES
+  -- reserva 1
+  ('01-12-2022', '07-12-2022', 'Portugal', 'PT 1', 'sailor.1.senior@mail.com'),
+  ('01-12-2022', '07-12-2022', 'Portugal', 'PT 1', 'sailor.3.junior@mail.com'),
+  -- reserva 2
+  ('08-12-2022', '14-12-2022', 'Portugal', 'PT 2', 'sailor.2.senior@mail.com'),
+  ('08-12-2022', '14-12-2022', 'Portugal', 'PT 2', 'sailor.4.junior@mail.com');
 
--- UPDATE senior SET email = 'bruno.j.cebola@tecnico.ulisboa.pt' WHERE email = 'bruno.s.cebola@tecnico.ulisboa.pt';
--- UPDATE junior SET email = 'bruno.s.cebola@tecnico.ulisboa.pt' WHERE email = 'bruno.j.cebola@tecnico.ulisboa.pt';
-
--- TODO: rever update
-
--- DELETE FROM junior WHERE email = '2';
--- UPDATE senior SET email = '2' WHERE email = '1';
--- INSERT INTO junior VALUES ('1');
-
--- COMMIT;
-
--- select email from sailor;
--- select email as s_email from senior;
--- select email as j_email from junior;
-
-
--- -- poupulate country
--- INSERT INTO country
--- VALUES 
---   ('Portugal', 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Portugal.svg/255px-Flag_of_Portugal.svg.png', 'PRT'), 
---   ('Espanha', 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png', 'ESP'), 
---   ('França', 'https://pt.wikipedia.org/wiki/Fran%C3%A7a#/media/Ficheiro:Flag_of_France_(1794%E2%80%931815,_1830%E2%80%931974,_2020%E2%80%93present).svg', 'FRA');
-
--- -- populate location
--- INSERT INTO location
--- VALUES 
---   (10, 10, 'Portugal', 'Madeira'),
---   (-10, -10, 'Portugal', 'Açores'),
---   (0, 0, 'Portugal', 'Lisboa'),
---   (0, 10, 'Portugal', 'Berlengas');
-
--- -- popuate sailor
--- INSERT INTO sailor
--- VALUES
---   ('bruno.m.cebola@tecnico.ulisboa.pt', 'Bruno', 'Cebola'),
---   ('joao.pedro.nunes@tecnico.ulisboa.pt', 'João', 'Nunes'),
---   ('rui.abrantes@tecnico.ulisboa.pt', 'Rui', 'Abrantes'),
---   ('pedro.santos@tecnico.ulisboa.pt', 'Pedro', 'Santos');
-
--- -- popuate junior
--- INSERT INTO junior
--- VALUES
---   ('joao.pedro.nunes@tecnico.ulisboa.pt'),
---   ('rui.abrantes@tecnico.ulisboa.pt');
-
--- -- populates senior
--- INSERT INTO senior
--- VALUES
---   ('bruno.m.cebola@tecnico.ulisboa.pt'),
---   ('pedro.santos@tecnico.ulisboa.pt');
-
--- -- populate boat_class
--- INSERT INTO boat_class
--- VALUES
---   ('Lancha', 10.50),
---   ('Catamaran', 25.25);
-
-
--- -- populate boat
--- INSERT INTO boat
--- VALUES  
---   ('Portugal', 'AXZ-879-145-TVC', 'Lancha', 'Barco 1', 10, 2022),
---   ('Portugal', '689-FEK-325-NKE', 'Lancha', 'Barco 2', 7.5, 2020),
---   ('França', 'BTH-UJN-552-829', 'Catamaran', 'Barco 3', 20, 2015),
---   ('Espanha', 'RIM-473-FEW-315', 'Catamaran', 'Barco 4', 25, 2018);
-
--- -- populate sailing_certificate
--- INSERT INTO sailing_certificate
--- VALUES
---   ('pedro.santos@tecnico.ulisboa.pt', '01-01-2021', '31-12-2023', 'Catamaran'),
---   ('bruno.m.cebola@tecnico.ulisboa.pt', '02-01-2021', '31-12-2023', 'Catamaran');
-
--- -- populate valid_for
--- INSERT INTO valid_for
--- VALUES
---   ('Portugal', 'bruno.m.cebola@tecnico.ulisboa.pt', '01-01-2021'),
---   ('Espanha', 'bruno.m.cebola@tecnico.ulisboa.pt', '01-01-2021'),
---   ('França', 'bruno.m.cebola@tecnico.ulisboa.pt', '01-01-2021'),
---   ('Portugal', 'bruno.m.cebola@tecnico.ulisboa.pt', '02-01-2021');
-
--- -- populate date_interval
--- INSERT INTO date_interval
--- VALUES
---   ('01-12-2022', '07-12-2022'),
---   ('08-12-2022', '15-12-2022');
-
--- -- populate reservation
--- INSERT INTO reservation
--- VALUES
---   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
---   ('Portugal', 'AXZ-879-145-TVC', '08-12-2022', '15-12-2022', 'pedro.santos@tecnico.ulisboa.pt'),
---   ('França', 'BTH-UJN-552-829', '08-12-2022', '15-12-2022', 'pedro.santos@tecnico.ulisboa.pt'),
---   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt');
-
--- -- populate authorised
--- INSERT INTO authorised
--- VALUES
---   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
---   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', 'joao.pedro.nunes@tecnico.ulisboa.pt'),
---   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'bruno.m.cebola@tecnico.ulisboa.pt'),
---   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', 'rui.abrantes@tecnico.ulisboa.pt'),
---   ('França', 'BTH-UJN-552-829', '08-12-2022', '15-12-2022', 'pedro.santos@tecnico.ulisboa.pt');
-
--- -- populate trip
--- INSERT INTO trip
--- VALUES
---   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', '01-12-2022', '03-12-2022', 'VR7NVNVEW7NWK330W', 'joao.pedro.nunes@tecnico.ulisboa.pt', 0, 0, 10, 10),
---   ('Portugal', 'AXZ-879-145-TVC', '01-12-2022', '07-12-2022', '04-12-2022', '07-12-2022', 'VR7NVNVEW7NWK330W', 'joao.pedro.nunes@tecnico.ulisboa.pt', 10, 10, 0, 0),
---   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', '08-12-2022', '11-12-2022', 'KJBRWV88R43NFO348', 'bruno.m.cebola@tecnico.ulisboa.pt', 10, 10, -10, -10),
---   ('Portugal', '689-FEK-325-NKE', '08-12-2022', '15-12-2022', '12-12-2022', '15-12-2022', 'KJBRWV88R43NFO348', 'rui.abrantes@tecnico.ulisboa.pt', -10, -10, 10, 10),
---   ('França', 'BTH-UJN-552-829', '08-12-2022', '15-12-2022', '08-12-2022', '15-12-2022', 'NL43KGJKNT5LRN4OJ', 'pedro.santos@tecnico.ulisboa.pt', 0, 0, 0, 10);
+-- populate trip
+INSERT INTO trip
+VALUES
+  -- reserva 1
+  ('01-12-2022', '02-12-2022', 'Insurance 1', 10, 10, -10, -10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
+  ('03-12-2022', '04-12-2022', 'Insurance 1', -10, -10, 10, 10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
+  ('05-12-2022', '07-12-2022', 'Insurance 1', 10, 10, -10, -10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
+  -- reserva 2
+  ('08-12-2022', '09-12-2022', 'Insurance 2', 10, 10, -10, -10, 'sailor.2.senior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2'),
+  ('10-12-2022', '11-12-2022', 'Insurance 2', -10, -10, 0, 10, 'sailor.2.senior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2'),
+  ('12-12-2022', '14-12-2022', 'Insurance 2', 0, 10, 10, 10, 'sailor.4.junior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2');
