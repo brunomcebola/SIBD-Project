@@ -12,6 +12,7 @@ print('Content-type:text/html\n\n')
 print('<html>')
 print('<head>')
 print('<title>Sailor</title>')
+print("""<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />""")
 print('</head>')
 print('<body>')
 connection = None
@@ -55,5 +56,10 @@ except Exception as e:
 finally:
     if connection is not None:
         connection.close()
+print("""
+    <button class="ui primary basic button">
+        <a href="home.cgi">Home</a>
+    </button>
+""")
 print('</body>')
 print('</html>')

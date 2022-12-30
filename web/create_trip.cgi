@@ -20,6 +20,7 @@ print('Content-type:text/html\n\n')
 print('<html>')
 print('<head>')
 print('<title>Trip</title>')
+print("""<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />""")
 print('</head>')
 print('<body>')
 connection = None
@@ -31,7 +32,6 @@ try:
     # Making query
     sql_reservation = 'INSERT INTO trip VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s);'
     data_reservation = (takeoff, arrival, insurance,from_latitude, from_longitude, to_latitude,to_longitude, skipper,reservation_start_date, reservation_end_date, boat_country, cni )
-
 
     print('<p>{}</p>'.format(sql_reservation % data_reservation))
 
@@ -52,5 +52,10 @@ except Exception as e:
 finally:
     if connection is not None:
         connection.close()
+print("""
+    <button class="ui primary basic button">
+        <a href="home.cgi">Home</a>
+    </button>
+""")
 print('</body>')
 print('</html>')

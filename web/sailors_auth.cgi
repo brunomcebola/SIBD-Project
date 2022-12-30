@@ -2,13 +2,14 @@
 import psycopg2
 import login
 
-print('Content-type:text/html\n\n')
+print('Content-type:text/html; charset=utf-8\n\n')
 print('<html>')
 print('<head>')
-print('<title>Lab 09</title>')
+print('<title>Sailors Authenticator</title>')
+print("""<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />""")
 print('</head>')
 print('<body>')
-print('<h3>Accounts</h3>')
+print('<h3>Sailors Authenticator</h3>')
 connection = None
 
 try:
@@ -25,7 +26,18 @@ try:
     # Create Sailor
     print('<a href="auth_sailor_form.cgi">Authorise Sailor</a>')
     # Displaying results
-    print('<table border="0" cellspacing="5">')
+    print("""
+        <table class="ui celled table">
+            <thead>
+                <tr><th>Start Date</th>
+                <th>End Date</th>
+                <th>Boat Country</th>
+                <th>CNI</th>
+                <th>Sailor's Email</th>
+                <th>Remove Reservation</th>
+            </tr></thead>
+            <tbody> 
+    """)
     for row in result:
         print('<tr>')
         for value in row:
@@ -33,7 +45,7 @@ try:
             print('<td>{}</td>'.format(value))
         
         # Remove Sailor
-        print('<td><a href="remove_reservation.cgi?start_date={}&end_date={}&country={}&cni={}&email={}">Remove Reservation</a></td>'.format(row[0],row[1],row[2],row[3], row[4] ))
+        print('<td><a href="deauth_sailor.cgi?start_date={}&end_date={}&country={}&cni={}&email={}">Remove Reservation</a></td>'.format(row[0],row[1],row[2],row[3], row[4] ))
         print('</tr>')
     print('</table>')
     # Closing connection
@@ -45,5 +57,10 @@ except Exception as e:
 finally:
     if connection is not None:
         connection.close()
+print("""
+    <button class="ui primary basic button">
+        <a href="home.cgi">Home</a>
+    </button>
+""")
 print('</body>')
 print('</html>')

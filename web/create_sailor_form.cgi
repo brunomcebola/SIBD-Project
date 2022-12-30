@@ -1,21 +1,41 @@
 #!/usr/bin/python3
-import cgi
-form = cgi.FieldStorage()
-account_number = form.getvalue('account_number')
 print('Content-type:text/html\n\n')
-print('<html>')
-print('<head>')
-print('<title>Sailor</title>')
-print('</head>')
-print('<body>')
-print('<h3>Create new Sailor')
 
-print('<form action="create_sailor.cgi" method="post">')
-print('<p>FirstName: <input type="text" name="firstname"/></p>')
-print('<p>Surname: <input type="text" name="surname"/></p>')
-print('<p>Email: <input type="text" name="email"/></p>')
-print('<p><input type="submit" value="Submit"/></p>')
-print('</form>')
-
-print('</body>')
-print('</html>')
+print('''
+<html>
+  <head>
+    <title>Sailor</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css" />
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js"></script>
+  </head>
+  <body>
+    <h3>Create Sailor</h3>
+    <form action="create_sailor.cgi" method="post" class="ui form">
+        <div class="ui form">
+            <div class="fields">
+                <div class="field">
+                    <label>Firstname</label>
+                    <input type="text" placeholder="First Name" name="firstname">
+                </div>
+                <div class="field">
+                    <label>Surname</label>
+                    <input type="text" placeholder="Middle Name" name="surname">
+                </div>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="text" placeholder="Email" name="email">
+                </div>
+                <div class="field">
+                    <label>Senior/Junior</label>
+                    <input type="text" placeholder="Senior/Junior" name="sailor_type">
+                </div>
+            </div>
+        </div>
+      <button class="ui button" type="submit">Submit</button>
+    </form>
+    <button class="ui primary basic button">
+        <a href="home.cgi">Home</a>
+    </button>
+  </body>
+</html>
+''')
