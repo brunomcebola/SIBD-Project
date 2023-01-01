@@ -121,13 +121,14 @@ CREATE TRIGGER tg_sailor_delete
 BEFORE DELETE ON sailor
 FOR EACH ROW EXECUTE PROCEDURE sailor_delete();
 
-CREATE CONSTRAINT TRIGGER tg_junior_delete
-AFTER DELETE ON junior DEFERRABLE
-FOR EACH ROW EXECUTE PROCEDURE junior_or_senior_delete();
+-- TODO: check this delete to let sailor delete work alone
+-- CREATE CONSTRAINT TRIGGER tg_junior_delete
+-- AFTER DELETE ON junior DEFERRABLE
+-- FOR EACH ROW EXECUTE PROCEDURE junior_or_senior_delete();
 
-CREATE CONSTRAINT TRIGGER tg_senior_delete
-AFTER DELETE ON senior DEFERRABLE
-FOR EACH ROW EXECUTE PROCEDURE junior_or_senior_delete();
+-- CREATE CONSTRAINT TRIGGER tg_senior_delete
+-- AFTER DELETE ON senior DEFERRABLE
+-- FOR EACH ROW EXECUTE PROCEDURE junior_or_senior_delete();
 --
 ---------------------- DATABASE IC-2 ------------------------
 --
@@ -135,14 +136,56 @@ FOR EACH ROW EXECUTE PROCEDURE junior_or_senior_delete();
 -- TODO: UPDATE
 -- TODO: DELETE
 --
--- DROP TRIGGERS
+-- DROP CHECK
 --
+ALTER TABLE trip DROP CONSTRAINT IF EXISTS ck_trip_insert;
 --
 -- DROP FUNCTONS
 --
+DROP FUNCTION IF EXISTS trip_insert;
 --
 -- CREATE FUNCTIONS
 --
+CREATE FUNCTION trip_insert(
+    new_trip_takeoff                 DATE,
+    new_trip_arrival                 DATE,
+    new_trip_reservation_start_date  DATE,
+    new_trip_reservation_end_date    DATE,
+    new_trip_boat_country            VARCHAR(70),
+    new_trip_cni                     VARCHAR(17)
+) RETURNS BOOLEAN AS 
+$$
+DECLARE old_trip trip%ROWTYPE;
+DECLARE cursor_trip CURSOR FOR
+    SELECT *
+    FROM trip t
+    WHERE (
+        t.reservation_start_date = new_trip_reservation_start_date AND 
+        t.reservation_end_date = new_trip_reservation_end_date AND 
+        t.boat_country = new_trip_boat_country AND 
+        t.cni = new_trip_cni);
+BEGIN
+    OPEN cursor_trip;
+    LOOP
+        FETCH cursor_trip INTO old_trip;
+        EXIT WHEN NOT FOUND;
+        -- check if new trip does not start in the middle of another one
+        IF old_trip.takeoff <= new_trip_takeoff AND old_trip.arrival >= new_trip_takeoff THEN
+            RAISE EXCEPTION 'A trip cannot start in the middle of another trip';
+        -- check if new trip does not finish in the middle of another one
+        ELSIF old_trip.takeoff <= new_trip_arrival AND old_trip.arrival >= new_trip_arrival THEN 
+            RAISE EXCEPTION 'A trip cannot finish in the middle of another trip';
+        -- check if new trip does not surround existing trip
+        ELSIF old_trip.takeoff >= new_trip_takeoff AND old_trip.arrival <= new_trip_arrival THEN 
+            RAISE EXCEPTION 'A trip cannot surround another trip';
+        END IF;
+    END LOOP;
+    CLOSE cursor_trip;
+    RETURN TRUE;
+END;
+$$ 
+LANGUAGE plpgsql;
 --
 -- CREATE TRIGGERS
 --
+ALTER TABLE trip ADD CONSTRAINT ck_trip_insert CHECK (trip_insert(takeoff, arrival, reservation_start_date, reservation_end_date, boat_country, cni)); 

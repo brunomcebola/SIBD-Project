@@ -16,9 +16,9 @@ DELETE FROM valid_for;
 DELETE FROM sailing_certificate;
 DELETE FROM boat;
 DELETE FROM boat_class;
-DELETE FROM senior;
-DELETE FROM junior;
-DELETE FROM sailor;
+
+DELETE FROM sailor; -- deletes also junior and senior
+
 DELETE FROM location;
 DELETE FROM country;
 --
@@ -39,6 +39,8 @@ VALUES
   (10, 0, 'Madrid', 'Espanha'),
   (0, 10, 'Paris', 'França');
 
+BEGIN TRANSACTION;
+SET CONSTRAINTS ALL DEFERRED;
 -- populate sailor
 INSERT INTO sailor
 VALUES
@@ -58,6 +60,7 @@ INSERT INTO senior
 VALUES
   ('sailor.1.senior@mail.com'),
   ('sailor.2.senior@mail.com');
+COMMIT;
 
 -- populate boat_class
 INSERT INTO boat_class
@@ -132,6 +135,8 @@ VALUES
   ('01-12-2022', '02-12-2022', 'Insurance 1', 10, 10, -10, -10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
   ('03-12-2022', '04-12-2022', 'Insurance 1', -10, -10, 10, 10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
   ('05-12-2022', '07-12-2022', 'Insurance 1', 10, 10, -10, -10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
+
+  ('02-12-2022', '03-12-2022', 'Insurance 1', 10, 10, -10, -10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
   -- reserva 2
   ('08-12-2022', '09-12-2022', 'Insurance 2', 10, 10, -10, -10, 'sailor.2.senior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2'),
   ('10-12-2022', '11-12-2022', 'Insurance 2', -10, -10, 0, 10, 'sailor.2.senior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2'),

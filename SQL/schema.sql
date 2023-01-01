@@ -160,11 +160,7 @@ CREATE TABLE trip(
     FOREIGN KEY (skipper) REFERENCES sailor (email),
     FOREIGN KEY(from_latitude,from_longitude) REFERENCES location(latitude,longitude),
     FOREIGN KEY(to_latitude,to_longitude) REFERENCES location(latitude,longitude),
-    CHECK (takeoff >= reservation_start_date) -- (IC-4)
+    CHECK (takeoff >= reservation_start_date AND arrival <= reservation_end_date) -- (IC-4)
 
     -- (IC-3) The skipper must be an authorized sailor of the corresponding reservation.
 );
-
-
-
-
