@@ -132,10 +132,6 @@ FOR EACH ROW EXECUTE PROCEDURE sailor_delete();
 --
 ---------------------- DATABASE IC-2 ------------------------
 --
--- TODO: INSERT
--- TODO: UPDATE
--- TODO: DELETE
---
 -- DROP CHECK
 --
 ALTER TABLE trip DROP CONSTRAINT IF EXISTS ck_trip_insert;
@@ -155,7 +151,7 @@ CREATE FUNCTION trip_insert(
     new_trip_cni                     VARCHAR(17)
 ) RETURNS BOOLEAN AS 
 $$
-DECLARE old_trip trip%ROWTYPE;
+DECLARE trip_var trip%ROWTYPE;
 DECLARE cursor_trip CURSOR FOR
     SELECT *
     FROM trip t
@@ -167,16 +163,27 @@ DECLARE cursor_trip CURSOR FOR
 BEGIN
     OPEN cursor_trip;
     LOOP
-        FETCH cursor_trip INTO old_trip;
+        FETCH cursor_trip INTO trip_var;
         EXIT WHEN NOT FOUND;
+        IF
+            trip_var.takeoff = new_trip_takeoff AND
+            trip_var.reservation_start_date = new_trip_reservation_start_date AND 
+            trip_var.reservation_end_date = new_trip_reservation_end_date AND 
+            trip_var.boat_country = new_trip_boat_country AND 
+            trip_var.cni = new_trip_cni
+        THEN
+            CONTINUE;
         -- check if new trip does not start in the middle of another one
-        IF old_trip.takeoff <= new_trip_takeoff AND old_trip.arrival >= new_trip_takeoff THEN
+        ELSIF trip_var.takeoff < new_trip_takeoff AND trip_var.arrival > new_trip_takeoff THEN
+            CLOSE cursor_trip;
             RAISE EXCEPTION 'A trip cannot start in the middle of another trip';
         -- check if new trip does not finish in the middle of another one
-        ELSIF old_trip.takeoff <= new_trip_arrival AND old_trip.arrival >= new_trip_arrival THEN 
+        ELSIF trip_var.takeoff < new_trip_arrival AND trip_var.arrival > new_trip_arrival THEN 
+            CLOSE cursor_trip;
             RAISE EXCEPTION 'A trip cannot finish in the middle of another trip';
         -- check if new trip does not surround existing trip
-        ELSIF old_trip.takeoff >= new_trip_takeoff AND old_trip.arrival <= new_trip_arrival THEN 
+        ELSIF trip_var.takeoff >= new_trip_takeoff AND trip_var.arrival <= new_trip_arrival THEN 
+            CLOSE cursor_trip;
             RAISE EXCEPTION 'A trip cannot surround another trip';
         END IF;
     END LOOP;
@@ -186,6 +193,6 @@ END;
 $$ 
 LANGUAGE plpgsql;
 --
--- CREATE TRIGGERS
+-- CREATE CHECK
 --
 ALTER TABLE trip ADD CONSTRAINT ck_trip_insert CHECK (trip_insert(takeoff, arrival, reservation_start_date, reservation_end_date, boat_country, cni)); 
