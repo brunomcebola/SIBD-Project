@@ -174,11 +174,11 @@ BEGIN
         THEN
             CONTINUE;
         -- check if new trip does not start in the middle of another one
-        ELSIF trip_var.takeoff < new_trip_takeoff AND trip_var.arrival > new_trip_takeoff THEN
+        ELSIF trip_var.takeoff <= new_trip_takeoff AND trip_var.arrival >= new_trip_takeoff THEN
             CLOSE cursor_trip;
             RAISE EXCEPTION 'A trip cannot start in the middle of another trip';
         -- check if new trip does not finish in the middle of another one
-        ELSIF trip_var.takeoff < new_trip_arrival AND trip_var.arrival > new_trip_arrival THEN 
+        ELSIF trip_var.takeoff <= new_trip_arrival AND trip_var.arrival >= new_trip_arrival THEN 
             CLOSE cursor_trip;
             RAISE EXCEPTION 'A trip cannot finish in the middle of another trip';
         -- check if new trip does not surround existing trip

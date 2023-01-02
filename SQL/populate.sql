@@ -41,11 +41,15 @@ VALUES
 
 BEGIN TRANSACTION;
 SET CONSTRAINTS ALL DEFERRED;
+
 -- populate sailor
 INSERT INTO sailor
 VALUES
+  -- senior
   ('Sailor 1', 'Senior', 'sailor.1.senior@mail.com'),
   ('Sailor 2', 'Senior', 'sailor.2.senior@mail.com'),
+  ('Sailor 5', 'Senior', 'sailor.5.senior@mail.com'),
+  -- junior
   ('Sailor 3', 'Junior', 'sailor.3.junior@mail.com'),
   ('Sailor 4', 'Junior', 'sailor.4.junior@mail.com');
 
@@ -59,7 +63,9 @@ VALUES
 INSERT INTO senior
 VALUES
   ('sailor.1.senior@mail.com'),
-  ('sailor.2.senior@mail.com');
+  ('sailor.2.senior@mail.com'),
+  ('sailor.5.senior@mail.com');
+
 COMMIT;
 
 -- populate boat_class
@@ -72,6 +78,7 @@ VALUES
 -- populate sailing_certificate
 INSERT INTO sailing_certificate
 VALUES
+  -- TODO: missing certificates
   -- sailor 1
   ('01-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.1.senior@mail.com', 'Class 1'),
   ('02-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.1.senior@mail.com', 'Class 2'),
@@ -124,21 +131,22 @@ VALUES
   -- reserva 1
   ('01-12-2022', '07-12-2022', 'Portugal', 'PT 1', 'sailor.1.senior@mail.com'),
   ('01-12-2022', '07-12-2022', 'Portugal', 'PT 1', 'sailor.3.junior@mail.com'),
+  ('01-12-2022', '07-12-2022', 'Portugal', 'PT 1', 'sailor.5.senior@mail.com'),
   -- reserva 2
   ('08-12-2022', '14-12-2022', 'Portugal', 'PT 2', 'sailor.2.senior@mail.com'),
-  ('08-12-2022', '14-12-2022', 'Portugal', 'PT 2', 'sailor.4.junior@mail.com');
+  ('08-12-2022', '14-12-2022', 'Portugal', 'PT 2', 'sailor.4.junior@mail.com'),
+  ('08-12-2022', '14-12-2022', 'Portugal', 'PT 2', 'sailor.5.senior@mail.com');
 
 -- populate trip
 INSERT INTO trip
 VALUES
   -- reserva 1
   ('01-12-2022', '02-12-2022', 'Insurance 1', 10, 10, -10, -10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
-  ('03-12-2022', '04-12-2022', 'Insurance 1', -10, -10, 10, 10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
-  ('05-12-2022', '07-12-2022', 'Insurance 1', 10, 10, -10, -10, 'sailor.1.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
+  ('03-12-2022', '04-12-2022', 'Insurance 1', -10, -10, 10, 10, 'sailor.5.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
+  ('05-12-2022', '07-12-2022', 'Insurance 1', 10, 10, -10, -10, 'sailor.5.senior@mail.com', '01-12-2022', '07-12-2022', 'Portugal', 'PT 1'),
   -- reserva 2
   ('08-12-2022', '09-12-2022', 'Insurance 2', 10, 10, -10, -10, 'sailor.2.senior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2'),
-  ('10-12-2022', '11-12-2022', 'Insurance 2', -10, -10, 0, 10, 'sailor.2.senior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2'),
-  ('12-12-2022', '14-12-2022', 'Insurance 2', 0, 10, 10, 10, 'sailor.4.junior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2');
+  ('10-12-2022', '12-12-2022', 'Insurance 2', -10, -10, 0, 10, 'sailor.5.senior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2'),
+  ('13-12-2022', '14-12-2022', 'Insurance 2', 0, 10, 10, 10, 'sailor.4.junior@mail.com', '08-12-2022', '14-12-2022', 'Portugal', 'PT 2');
 
--- UPDATE trip SET takeoff = '04-12-2022' WHERE takeoff = '03-12-2022'; 
-UPDATE trip SET arrival = '04-12-2022' WHERE arrival = '02-12-2022'; 
+-- TODO: make query output more sexy
