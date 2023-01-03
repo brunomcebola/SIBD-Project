@@ -80,7 +80,6 @@ VALUES
 -- populate sailing_certificate
 INSERT INTO sailing_certificate
 VALUES
-  -- TODO: missing certificates
   -- sailor 1
   ('01-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.1.senior@mail.com', 'Class 1'),
   ('02-01-2021 18:00:12', '31-12-2023 18:00:12', 'sailor.1.senior@mail.com', 'Class 2'),
@@ -96,7 +95,6 @@ VALUES
 -- populate valid_for
 INSERT INTO valid_for
 VALUES
-  -- TODO: missing certificates
   ('Espanha', 25.25, 'sailor.1.senior@mail.com', '01-01-2021 18:00:12'),
   ('França', 25.25, 'sailor.1.senior@mail.com', '01-01-2021 18:00:12'),
   ('Portugal', 25.25, 'sailor.1.senior@mail.com', '01-01-2021 18:00:12');

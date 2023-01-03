@@ -1,3 +1,13 @@
+-------------------------------------------------------------
+--
+-- SIBD Project - Part 3
+--
+-- Bruno Cebola - 93030
+-- João Nunes - 93100
+-- Rui Abrantes - 93176
+--
+--------------------- DATABASE VIEW ------------------------
+
 DROP VIEW IF EXISTS trip_info;
 
 CREATE VIEW trip_info AS
@@ -16,7 +26,3 @@ JOIN country c1 ON l1.country_name = c1.name
 JOIN country c2 ON l2.country_name = c2.name
 JOIN boat b ON (t.boat_country, t.cni) = (b.country, b.cni)
 JOIN country c_b ON c_b.name = b.country;
-
---TESTING PURPOSES, REMOVE BEFORE DELIVERING
-SELECT *
-FROM trip_info;

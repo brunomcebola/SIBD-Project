@@ -10,7 +10,7 @@ print('Content-type:text/html\n\n')
 print("""
 <html>
     <head>
-        <title>Sailor</title>
+        <title>Delete Sailor</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <style>
@@ -55,7 +55,7 @@ print("""
         <div class="bg">
             <div class="ui five item menu">
                 <a class="item" href="home.cgi"><i class="material-icons">home</i>Home</a>
-                <a class="active item" href="sailors.cgi">Sailors</a>
+                <a class="item" href="sailors.cgi">Sailors</a>
                 <a class="item" href="reservations.cgi" >Reservations</a>
                 <a class="item" href="sailors_auth.cgi">Authorised Sailors</a>
                 <a class="item" href="trips.cgi">Trips</a>
@@ -64,22 +64,77 @@ print("""
 """)
 connection = None
 try:
+    can_delete = True
+    
     # Creating connection
     connection = psycopg2.connect(login.credentials)
     cursor = connection.cursor()
+    
+    # check trip
 
-    sql_sailor = "DELETE FROM sailor WHERE email = %s;"
-    data = (email, )
+    sql = "SELECT * FROM trip WHERE skipper = %(email)s"
+    data = {"email":email}
 
-    cursor.execute(sql_sailor, data)
+    cursor.execute(sql, data)
+    records = cursor.fetchall()
+    num_records = len(records)
 
-    # Commit the update (without this step the database will not change)
-    connection.commit()
+    if num_records >= 1:
+        can_delete = False
+        print("<h1> You can not delete this sailor, because it is referenced by some Trip</h1>")
+    
+    # check reservation
+
+    sql = "SELECT * FROM reservation WHERE responsible = %(email)s"
+    data = {"email":email}
+
+    cursor.execute(sql, data)
+    records = cursor.fetchall()
+    num_records = len(records)
+
+    if num_records >= 1:
+        can_delete = False
+        print("<h1> You can not delete this sailor, because it is referenced by some Reservation</h1>")
+        
+    # check authorised
+
+    sql = "SELECT * FROM authorised WHERE sailor = %(email)s"
+    data = {"email":email}
+
+    cursor.execute(sql, data)
+    records = cursor.fetchall()
+    num_records = len(records)
+
+    if num_records >= 1:
+        can_delete = False
+        print("<h1> You can not delete this sailor, because it is referenced by some Authorised Sailor</h1>")
+    
+    # check certificate
+
+    sql = "SELECT * FROM sailing_certificate WHERE sailor = %(email)s"
+    data = {"email":email}
+
+    cursor.execute(sql, data)
+    records = cursor.fetchall()
+    num_records = len(records)
+
+    if num_records >= 1:
+        can_delete = False
+        print("<h1> You can not delete this sailor, because it is referenced by some Sailing Certificate</h1>")
+        
+    # if all okay, then delete
+
+    if can_delete:
+        sql = "DELETE FROM sailor WHERE email = %s;"
+        data = (email, )
+    
+        cursor.execute(sql, data)
+        connection.commit()
+        
+        print('<h1>Sailor successfully deleted</h1>')
 
     # Closing connection
     cursor.close()
-    
-    print('<h1>Sailor successfully deleted</h1>')
 
 except Exception as e:
     # Print errors on the webpage if they occur

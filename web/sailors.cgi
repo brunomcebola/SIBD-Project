@@ -10,7 +10,7 @@ print('Content-type:text/html; charset=utf-8\n\n')
 print(""" 
 <html>
     <head>
-        <title>Sailor</title>
+        <title>Sailors</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <style>

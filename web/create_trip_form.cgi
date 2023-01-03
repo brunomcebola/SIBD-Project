@@ -4,114 +4,140 @@ import login
 
 print('Content-type:text/html; charset=utf-8\n\n')
 
-print("""
-<!DOCTYPE html>
+print(""" 
 <html>
-  <head>
-    <title>Trip</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css" />
-    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js"></script>
-  
-    <style>
-    body, html {
-      height: 100%;
-    }
+    <head>
+        <title>Create Trip Form</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+            body, html {
+                height: 100%;
+            }
 
-    .bg {
-      /* The image used */
-      background-image: url("boat_wallpaper.jpg");
+            .bg {                
+                /* The image used */
+                background-image: url("boat_wallpaper_transparent.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
 
-      /* Full height */
-      height: 100%;
+                min-height: 100%;
+            }
+            
+            .ui {
+                position: fixed;
+            }
+            
+            .material-icons {
+                padding-right: 5px;
+            }
+            
+            .content {
+                padding: 75px 25px;
+            }
+            
+            table {
+                position: relative !important;
+                width: 100% !important;
+            }
+            
+            .pagination {
+                position: relative;
+            }
+            
+            parent {
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            #left {
+                width: 30%;
+                float: left;
+                padding-right: 10px;
+            }
+            
+            #right {
+                width: 70%;
+                float: left;
+                padding-left: 10px;
+            }
 
-      /* Center and scale the image nicely */
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
+        </style>
+    </head>
+    <body>
+        <div class="bg">
+            <div class="ui five item menu">
+                <a class="item" href="home.cgi"><i class="material-icons">home</i>Home</a>
+                <a class="item" href="sailors.cgi">Sailors</a>
+                <a class="item" href="reservations.cgi" >Reservations</a>
+                <a class="item" href="sailors_auth.cgi">Authorised Sailors</a>
+                <a class="item" href="trips.cgi">Trips</a>
+            </div>
+            <div class="content">
+              <h2>Create Trip</h2>
+              <div id="parent">
+                  <div id="left">
+                    <form action="create_trip.cgi" method="post" class="ui form">
+                      <div class="ui form">
 
-    #parent {
-      display: flex;
-      justify-content: space-between;
-    }
-    
-    #right {
-      padding : 50px;
-      width: 70%;
-    }
+                        <div class="fields">
+                          <div class="field">
+                              <label>Takeoff</label>
+                              <input type="date" placeholder="Takeoff" name="takeoff">
+                          </div>
+                          <div class="field">
+                              <label>Arrival</label>
+                              <input type="date" placeholder="Arrival" name="arrival">
+                          </div>
+                        </div>
 
-    #left {
-     padding : 50px;
-    }
+                        <div class="fields">
+                          <div class="field">
+                              <label>Insurance</label>
+                              <input type="text" placeholder="Insurance" name="insurance">
+                          </div>
+                        </div>
 
-    </style>
-    
-  </head>
-  <body>
-    <div class="bg">
-    <h2>Create Trip</h2>
-    <div id="parent">
+                        <div class="fields">
+                          <div class="field">
+                              <label>From Latitude</label>
+                              <input type="text" placeholder="From Latitude" name="from_latitude">
+                          </div>
+                          <div class="field">
+                              <label>From Longitude</label>
+                              <input type="text" placeholder="From Longitude" name="from_longitude">
+                          </div>
+                        </div>
 
-        <div id="left">
-          <form action="create_trip.cgi" method="post" class="ui form">
-            <div class="ui form">
+                        <div class="fields">
+                          <div class="field">
+                              <label>To Latitude</label>
+                              <input type="text" placeholder="To Latitude" name="to_latitude">
+                          </div>
+                          <div class="field">
+                              <label>To Longitude</label>
+                              <input type="text" placeholder="To Longitude" name="to_longitude">
+                          </div>
+                        </div>
 
-              <div class="fields">
-                <div class="field">
-                    <label>Takeoff</label>
-                    <input type="date" placeholder="Takeoff" name="takeoff">
-                </div>
-                <div class="field">
-                    <label>Arrival</label>
-                    <input type="date" placeholder="Arrival" name="arrival">
-                </div>
-              </div>
+                        <div class="fields">
+                          <div class="field">
+                              <label>Reservation Start Date</label>
+                              <input type="date" placeholder="Reservation Start Date" name="reservation_start_date">
+                          </div>
+                          <div class="field">
+                              <label>Reservation End Date</label>
+                              <input type="date" placeholder="Reservation End Date" name="reservation_end_date">
+                          </div>
+                        </div>
 
-              <div class="fields">
-                <div class="field">
-                    <label>Insurance</label>
-                    <input type="text" placeholder="Insurance" name="insurance">
-                </div>
-              </div>
-
-              <div class="fields">
-                <div class="field">
-                    <label>From Latitude</label>
-                    <input type="text" placeholder="From Latitude" name="from_latitude">
-                </div>
-                <div class="field">
-                    <label>From Longitude</label>
-                    <input type="text" placeholder="From Longitude" name="from_longitude">
-                </div>
-              </div>
-
-              <div class="fields">
-                <div class="field">
-                    <label>To Latitude</label>
-                    <input type="text" placeholder="To Latitude" name="to_latitude">
-                </div>
-                <div class="field">
-                    <label>To Longitude</label>
-                    <input type="text" placeholder="To Longitude" name="to_longitude">
-                </div>
-              </div>
-
-              <div class="fields">
-                <div class="field">
-                    <label>Reservation Start Date</label>
-                    <input type="date" placeholder="Reservation Start Date" name="reservation_start_date">
-                </div>
-                <div class="field">
-                    <label>Reservation End Date</label>
-                    <input type="date" placeholder="Reservation End Date" name="reservation_end_date">
-                </div>
-              </div>
-
-              <div class="fields">
-                <div class="field">
-                        <select name="boat_country">
-                            <option value="">Country</option> 
-                            """)
+                        <div class="fields">
+                          <div class="field">
+                            <label>Boat Country</label>
+                            <select name="boat_country">
+  """)
 connection = None
 
 try:
@@ -134,8 +160,8 @@ try:
                     </select>
                 </div>
                 <div class="field">
+                    <label>Boat CNI</label>
                     <select name="cni">
-                        <option value="">CNI</option> 
     """)
     sql = 'SELECT DISTINCT cni FROM reservation;'
     cursor.execute(sql)
@@ -149,8 +175,8 @@ try:
                     </select>
                 </div>
                 <div class="field">
+                    <label>Skipper</label>
                     <select name="skipper">
-                        <option value="">Email</option> 
     """)
     sql = 'SELECT email FROM sailor;'
     cursor.execute(sql)
@@ -178,7 +204,7 @@ finally:
                         
 print("""
         </div>
-      <button class="ui button" type="submit">Submit</button>
+      <button class="ui button primary" type="submit">Submit</button>
     </form>
   </div>
   """)
@@ -232,11 +258,9 @@ finally:
 
 
 print("""
+          </div>
         </div>
       </div>
-      <button class="ui yellow button">
-          <a href="sailors.cgi" >Home</a>
-      </button>
     </div>
   </body>
 </html>

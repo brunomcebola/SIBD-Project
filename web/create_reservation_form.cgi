@@ -3,62 +3,81 @@ import psycopg2
 import login
 print('Content-type:text/html; charset=utf-8\n\n')
 
-print("""
+print(""" 
 <html>
-  <head>
-    <title>Reservation</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css" />
-    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js"></script>
-    <style>
-        body, html {
-        height: 100%;
-        }
+    <head>
+        <title>Create Reservation Form</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+            body, html {
+                height: 100%;
+            }
 
-        .bg {
-        /* The image used */
-        background-image: url("boat_wallpaper.jpg");
+            .bg {                
+                /* The image used */
+                background-image: url("boat_wallpaper_transparent.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
 
-        /* Full height */
-        height: 100%;
+                min-height: 100%;
+            }
+            
+            .ui {
+                position: fixed;
+            }
+            
+            .material-icons {
+                padding-right: 5px;
+            }
+            
+            .content {
+                padding: 75px 25px;
+            }
+            
+            table {
+                position: relative !important;
+                width: 100% !important;
+            }
+            
+            .pagination {
+                position: relative;
+            }
 
-        /* Center and scale the image nicely */
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-
-        padding: 50px;
-        }
-    </style>
-  </head>
-  <body>
-    <div class="bg">
-    <h3>Create Reservation</h3>
-    <form action="create_reservation.cgi" method="post" class="ui form">
-        <div class="ui form">
-            <div class="fields">
-                <div class="field">
-                    <div class="ui calendar" id="start_date">
-                        <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        <input type="date" placeholder="Start Date" name="start_date">
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="ui calendar" id="end_date">
-                        <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        <input type="date" placeholder="End Date" name="end_date">
-                        </div>
-                    </div>
-                </div>
+        </style>
+    </head>
+    <body>
+        <div class="bg">
+            <div class="ui five item menu">
+                <a class="item" href="home.cgi"><i class="material-icons">home</i>Home</a>
+                <a class="item" href="sailors.cgi">Sailors</a>
+                <a class="item" href="reservations.cgi" >Reservations</a>
+                <a class="item" href="sailors_auth.cgi">Authorised Sailors</a>
+                <a class="item" href="trips.cgi">Trips</a>
             </div>
+            <div class="content">
+                <h2>Create Reservation</h2>
+                <form action="create_reservation.cgi" method="post" class="ui form">
+                    <div class="ui form">                        
+                        <div class="fields">
+                          <div class="field">
+                              <label>Start Date</label>
+                              <input type="date" placeholder="Takeoff" name="start_date">
+                          </div>
+                          <div class="field">
+                              <label>End Date</label>
+                              <input type="date" placeholder="Arrival" name="end_date">
+                          </div>
+                        </div>
 
-            <div class="fields">
-                <div class="field">
-                    <select name="country">
-                        <option value="">Country</option> 
-                        """)
+                        <div class="fields">
+                            <div class="field">
+                                <label>Boat Country</label>
+                                <select name="country">
+""")
+
 connection = None
 
 try:
@@ -81,8 +100,8 @@ try:
                     </select>
                 </div>
                 <div class="field">
+                    <label>Boat CNI</label>
                     <select name="cni">
-                        <option value="">CNI</option> 
     """)
     sql = 'SELECT cni FROM boat;'
     cursor.execute(sql)
@@ -97,8 +116,8 @@ try:
                     </select>
                 </div>
                 <div class="field">
+                    <label>Resposible</label>
                     <select name="email">
-                        <option value="">Email</option> 
     """)
     sql = 'SELECT email FROM sailor;'
     cursor.execute(sql)
@@ -114,6 +133,8 @@ try:
                     </select>
                 </div>
             </div>
+            <button class="ui button primary" type="submit">Submit</button>
+        </form>
     """)
 
     cursor.close()
@@ -125,12 +146,9 @@ finally:
         connection.close()
                         
 print("""
+          </div>
         </div>
-      <button class="ui button" type="submit">Submit</button>
-    </form>
-    <button class="ui yellow button">
-        <a href="sailors.cgi">Home</a>
-    </button>
+      </div>
     </div>
   </body>
 </html>

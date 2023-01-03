@@ -97,7 +97,7 @@ try:
                 <th>Boat Country</th>
                 <th>CNI</th>
                 <th>Sailor's Email</th>
-                <th>Remove Reservation</th>
+                <th>Remove Authorisation</th>
             </tr></thead>
             <tbody> 
     """)
@@ -108,7 +108,7 @@ try:
             print('<td>{}</td>'.format(value))
         
         # Remove Sailor
-        print('<td><a href="deauth_sailor.cgi?start_date={}&end_date={}&country={}&cni={}&email={}">Remove Reservation</a></td>'.format(row[0],row[1],row[2],row[3], row[4] ))
+        print('<td><a href="deauth_sailor.cgi?start_date={}&end_date={}&country={}&cni={}&email={}">Remove Authorisation</a></td>'.format(row[0],row[1],row[2],row[3], row[4] ))
         print('</tr>')
     print("""
             </tbody>

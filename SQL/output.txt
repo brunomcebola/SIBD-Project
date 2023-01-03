@@ -1,6 +1,6 @@
 -------------------------------------------------------------
 --
--- SIBD Project - Part 2
+-- SIBD Project - Part 3
 --
 -- Bruno Cebola - 93030
 -- João Nunes - 93100
@@ -8,37 +8,41 @@
 --
 ---------------------- DATABASE OUTPUT --------------------
 --
-
--- (A) The name of all boats that are used in some trip
+-- 1) Which country has more boats registered than any other?
 --
-  name   
----------
- Barco 1
- Barco 2
- Barco 3
-(3 rows)
+ country  
+----------
+ Portugal
+ França
+(2 rows)
 
--- (B) The name of all boat that are not used in any trip
+-- 2) List all the sailors that have at least two certificates
 --
-  name   
----------
- Barco 4
+          email           | firstname | surname 
+--------------------------+-----------+---------
+ sailor.1.senior@mail.com | Sailor 1  | Senior
+ sailor.2.senior@mail.com | Sailor 2  | Senior
+(2 rows)
+
+-- 3) Who are the sailors that have sailed to every location in "Portugal"?
+--
+ firstname | surname |          email           
+-----------+---------+--------------------------
+ Sailor 5  | Senior  | sailor.5.senior@mail.com
 (1 row)
 
--- (C) The name of all boats registered in 'PRT' for which at least one
--- responsible for a reservation has a surname that ends with 'Santos'
+-- 4) List the sailors with the most skipped trips
 --
-  name   
----------
- Barco 1
+          email           | firstname | surname 
+--------------------------+-----------+---------
+ sailor.5.senior@mail.com | Sailor 5  | Senior
 (1 row)
 
--- (D) The full name of all skippers without any certification
--- corresponding to the class of the trip's boat
+-- 5) List the sailors with the longest duration of trips (sum of trip durations) for the same
+--   single reservation; display also the sum of the trips duration
 --
-  full_name   
---------------
- Bruno Cebola
- Rui Abrantes
- João Nunes
-(3 rows)
+          email           | firstname | surname | trips_duration_sum 
+--------------------------+-----------+---------+--------------------
+ sailor.5.senior@mail.com | Sailor 5  | Senior  |                  3
+ sailor.5.senior@mail.com | Sailor 5  | Senior  |                  5
+(2 rows)

@@ -1,6 +1,6 @@
 -------------------------------------------------------------
 --
--- SIBD Project - Part 2
+-- SIBD Project - Part 3
 --
 -- Bruno Cebola - 93030
 -- João Nunes - 93100

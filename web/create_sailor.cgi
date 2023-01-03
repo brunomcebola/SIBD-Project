@@ -13,7 +13,7 @@ print('Content-type:text/html\n\n')
 print("""
 <html>
     <head>
-        <title>Sailor</title>
+        <title>Create Sailor</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <style>
@@ -58,7 +58,7 @@ print("""
         <div class="bg">
             <div class="ui five item menu">
                 <a class="item" href="home.cgi"><i class="material-icons">home</i>Home</a>
-                <a class="active item" href="sailors.cgi">Sailors</a>
+                <a class="item" href="sailors.cgi">Sailors</a>
                 <a class="item" href="reservations.cgi" >Reservations</a>
                 <a class="item" href="sailors_auth.cgi">Authorised Sailors</a>
                 <a class="item" href="trips.cgi">Trips</a>

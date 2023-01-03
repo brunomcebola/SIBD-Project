@@ -115,7 +115,7 @@ try:
             print('<td>{}</td>'.format(value))
         
         # Remove Sailor
-        print('<td><a href="remove_trip.cgi?takeoff={}&reservation_start_date={}&reservation_end_date={}&boat_country={}&cni={}">Remove Trip</a></td>'.format(row[0],row[8],row[9],row[10],row[11]))
+        print('<td><a href="delete_trip.cgi?takeoff={}&reservation_start_date={}&reservation_end_date={}&boat_country={}&cni={}">Remove Trip</a></td>'.format(row[0],row[8],row[9],row[10],row[11]))
 
         print('</tr>')
     print("""
