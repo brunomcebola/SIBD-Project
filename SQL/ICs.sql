@@ -13,21 +13,20 @@
 -- DROP TRIGGERS
 --
 DROP TRIGGER IF EXISTS tg_sailor_insert ON sailor;
-DROP TRIGGER IF EXISTS tg_junior_insert ON junior;
-DROP TRIGGER IF EXISTS tg_senior_insert ON senior;
-
 DROP TRIGGER IF EXISTS tg_sailor_delete ON sailor;
-DROP TRIGGER IF EXISTS tg_junior_delete ON junior;
-DROP TRIGGER IF EXISTS tg_senior_delete ON senior;
+--
+-- DROP CHECKS
+--
+ALTER TABLE junior DROP CONSTRAINT IF EXISTS check_junior;
+ALTER TABLE senior DROP CONSTRAINT IF EXISTS check_senior;
 --
 -- DROP FUNCTONS
 --
 DROP FUNCTION IF EXISTS sailor_insert;
-DROP FUNCTION IF EXISTS junior_insert;
-DROP FUNCTION IF EXISTS senior_insert;
-
 DROP FUNCTION IF EXISTS sailor_delete;
-DROP FUNCTION IF EXISTS junior_or_senior_delete;
+
+DROP FUNCTION IF EXISTS check_junior;
+DROP FUNCTION IF EXISTS check_senior;
 --
 -- CREATE FUNCTIONS
 --
@@ -47,33 +46,6 @@ END;
 $$ 
 LANGUAGE plpgsql;
 
-CREATE FUNCTION junior_insert()
-RETURNS TRIGGER AS 
-$$
-BEGIN
-    IF NEW.email IN (SELECT email FROM senior) THEN
-        RAISE EXCEPTION 'The sailor % already exists in table senior', NEW.email;
-    END IF;
-    
-    RETURN NEW;
-END;
-$$ 
-LANGUAGE plpgsql;
-
-CREATE FUNCTION senior_insert()
-RETURNS TRIGGER AS 
-$$
-BEGIN
-    IF NEW.email IN (SELECT email FROM junior) THEN
-        RAISE EXCEPTION 'The sailor % already exists in table junior', NEW.email;
-    ELSE
-        RETURN NEW;
-    END IF;
-END;
-$$ 
-LANGUAGE plpgsql;
-
-
 CREATE FUNCTION sailor_delete()
 RETURNS TRIGGER AS 
 $$
@@ -86,36 +58,63 @@ END;
 $$ 
 LANGUAGE plpgsql;
 
-CREATE FUNCTION junior_or_senior_delete()
-RETURNS TRIGGER AS 
+CREATE FUNCTION check_junior(
+    new_email VARCHAR(100)
+)
+RETURNS BOOLEAN AS 
 $$
 BEGIN
-    IF 
-        OLD.email IN (SELECT email FROM sailor) AND 
-        OLD.email NOT IN (SELECT email FROM junior) AND 
-        OLD.email NOT IN (SELECT email FROM senior)
-    THEN
-        RAISE EXCEPTION 'The sailor % must be deleted entirely or be assigned a role', OLD.email;
+    IF new_email IN (SELECT email FROM senior) THEN
+        RAISE EXCEPTION 'The sailor % already exists in table senior', new_email;
     END IF;
     
-    RETURN OLD;
+    RETURN TRUE;
 END;
 $$ 
 LANGUAGE plpgsql;
+
+CREATE FUNCTION check_senior(
+    new_email VARCHAR(100)
+)
+RETURNS BOOLEAN AS 
+$$
+BEGIN
+    IF new_email IN (SELECT email FROM junior) THEN
+        RAISE EXCEPTION 'The sailor % already exists in table junior', new_email;
+    END IF;
+    
+    RETURN TRUE;
+END;
+$$ 
+LANGUAGE plpgsql;
+
+-- CREATE FUNCTION junior_or_senior_delete()
+-- RETURNS TRIGGER AS 
+-- $$
+-- BEGIN
+--     IF 
+--         OLD.email IN (SELECT email FROM sailor) AND 
+--         OLD.email NOT IN (SELECT email FROM junior) AND 
+--         OLD.email NOT IN (SELECT email FROM senior)
+--     THEN
+--         RAISE EXCEPTION 'The sailor % must be deleted entirely or be assigned a role', OLD.email;
+--     END IF;
+    
+--     RETURN OLD;
+-- END;
+-- $$ 
+-- LANGUAGE plpgsql;
+--
+-- CREATE CHECK
+--
+ALTER TABLE junior ADD CONSTRAINT check_junior CHECK (check_junior(email)); 
+ALTER TABLE senior ADD CONSTRAINT check_senior CHECK (check_senior(email)); 
 --
 -- CREATE TRIGGERS
 --
 CREATE CONSTRAINT TRIGGER tg_sailor_insert
 AFTER INSERT ON sailor DEFERRABLE
 FOR EACH ROW EXECUTE PROCEDURE sailor_insert();
-
-CREATE CONSTRAINT TRIGGER tg_junior_insert
-AFTER INSERT ON junior DEFERRABLE
-FOR EACH ROW EXECUTE PROCEDURE junior_insert();
-
-CREATE CONSTRAINT TRIGGER tg_senior_insert
-AFTER INSERT ON senior DEFERRABLE
-FOR EACH ROW EXECUTE PROCEDURE senior_insert();
 
 CREATE TRIGGER tg_sailor_delete
 BEFORE DELETE ON sailor
@@ -134,15 +133,15 @@ FOR EACH ROW EXECUTE PROCEDURE sailor_delete();
 --
 -- DROP CHECK
 --
-ALTER TABLE trip DROP CONSTRAINT IF EXISTS ck_trip_insert;
+ALTER TABLE trip DROP CONSTRAINT IF EXISTS check_trip;
 --
 -- DROP FUNCTONS
 --
-DROP FUNCTION IF EXISTS trip_insert;
+DROP FUNCTION IF EXISTS check_trip;
 --
 -- CREATE FUNCTIONS
 --
-CREATE FUNCTION trip_insert(
+CREATE FUNCTION check_trip(
     new_trip_takeoff                 DATE,
     new_trip_arrival                 DATE,
     new_trip_reservation_start_date  DATE,
@@ -195,4 +194,4 @@ LANGUAGE plpgsql;
 --
 -- CREATE CHECK
 --
-ALTER TABLE trip ADD CONSTRAINT ck_trip_insert CHECK (trip_insert(takeoff, arrival, reservation_start_date, reservation_end_date, boat_country, cni)); 
+ALTER TABLE trip ADD CONSTRAINT check_trip CHECK (check_trip(takeoff, arrival, reservation_start_date, reservation_end_date, boat_country, cni)); 
