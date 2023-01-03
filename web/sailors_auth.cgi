@@ -1,13 +1,16 @@
 #!/usr/bin/python3
 import psycopg2
 import login
+import math
+import os
+from urllib.parse import parse_qs
 
 print('Content-type:text/html; charset=utf-8\n\n')
 
 print(""" 
 <html>
     <head>
-        <title>Sailor</title>
+        <title>Authorised Sailors</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <style>
@@ -42,6 +45,10 @@ print("""
                 position: relative !important;
                 width: 100% !important;
             }
+            
+            .pagination {
+                position: relative;
+            }
         </style>
     </head>
     <body>
@@ -55,22 +62,32 @@ print("""
             </div>
             <div class="content">
                 <h2>Authorised Sailors</h2>
+                <a href="auth_sailor_form.cgi">Authorise Sailor</a>
 """)
+
 connection = None
+
+query_string = parse_qs(os.environ.get('QUERY_STRING'))
+
+page = int(query_string['page'][0]) if 'page' in query_string else 1
+# perPage = int(query_string['perPage'][0]) if 'perPage' in query_string else 5
+perPage = 5
 
 try:
     # Creating connection
     connection = psycopg2.connect(login.credentials)
     cursor = connection.cursor()
 
+    # Get number of records
+    sql = 'SELECT count(*) FROM authorised;'
+    cursor.execute(sql)
+    total = cursor.fetchone()[0]
+    
     # Making query
-    sql = 'SELECT * FROM authorised;'
+    sql = 'SELECT * FROM authorised LIMIT {} OFFSET {};'.format(perPage, (page - 1) * perPage)
     cursor.execute(sql)
     result = cursor.fetchall()
-    num = len(result)
 
-    # Create Sailor
-    print('<a href="auth_sailor_form.cgi">Authorise Sailor</a>')
     # Displaying results
     print("""
         <table class="ui celled table">
@@ -93,7 +110,31 @@ try:
         # Remove Sailor
         print('<td><a href="deauth_sailor.cgi?start_date={}&end_date={}&country={}&cni={}&email={}">Remove Reservation</a></td>'.format(row[0],row[1],row[2],row[3], row[4] ))
         print('</tr>')
-    print('</table>')
+    print("""
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="6">
+                        <div class="ui right floated pagination menu">
+                            <a class="icon item" href="sailors_auth.cgi?page={}">
+                                <i class="left chevron icon"></i>
+                            </a>
+    """.format(page - 1 if page != 1 else page))
+    
+    
+    for i in range(1, math.ceil(total / perPage) + 1):
+        print('<a class="item {}" href="sailors_auth.cgi?page={}">{}</a>'.format('active' if i == page else '', i, i))
+    
+    print("""
+                            <a class="icon item" href="sailors_auth.cgi?page={}">
+                                <i class="right chevron icon"></i>
+                            </a>
+                        </div>
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    """.format(page + 1 if page != math.ceil(total / perPage) else math.ceil(total / perPage)))
     # Closing connection
     cursor.close()
 except Exception as e:

@@ -99,6 +99,7 @@ try:
             </tr></thead>
             <tbody> 
     """)
+    
     for row in result:
         print('<tr>')
         
