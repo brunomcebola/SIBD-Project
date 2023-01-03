@@ -3,13 +3,59 @@ import psycopg2
 import login
 
 print('Content-type:text/html; charset=utf-8\n\n')
-print('<html>')
-print('<head>')
-print('<title>Sailors Authenticator</title>')
-print("""<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />""")
-print('</head>')
-print('<body>')
-print('<h3>Sailors Authenticator</h3>')
+
+print(""" 
+<html>
+    <head>
+        <title>Sailor</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <style>
+            body, html {
+                height: 100%;
+            }
+
+            .bg {                
+                /* The image used */
+                background-image: url("boat_wallpaper_transparent.png");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+
+                min-height: 100%;
+            }
+            
+            .ui {
+                position: fixed;
+            }
+            
+            .material-icons {
+                padding-right: 5px;
+            }
+            
+            .content {
+                padding: 75px 25px;
+            }
+            
+            table {
+                position: relative !important;
+                width: 100% !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="bg">
+            <div class="ui five item menu">
+                <a class="item" href="home.cgi"><i class="material-icons">home</i>Home</a>
+                <a class="item" href="sailors.cgi">Sailors</a>
+                <a class="item" href="reservations.cgi" >Reservations</a>
+                <a class="active item" href="sailors_auth.cgi">Authorised Sailors</a>
+                <a class="item" href="trips.cgi">Trips</a>
+            </div>
+            <div class="content">
+                <h2>Authorised Sailors</h2>
+""")
 connection = None
 
 try:
@@ -52,15 +98,13 @@ try:
     cursor.close()
 except Exception as e:
     # Print errors on the webpage if they occur
-    print('<h1>An error occurred.</h1>') 
-    print('<p>{}</p>'.format(e))
+    print('<h1>An error occurred in the input of the querry. Try again, if there is still an error contact the server</h1>')
 finally:
     if connection is not None:
         connection.close()
 print("""
-    <button class="ui primary basic button">
-        <a href="home.cgi">Home</a>
-    </button>
+            </div>
+        </div>
+    </body>
+</html>
 """)
-print('</body>')
-print('</html>')

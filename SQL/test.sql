@@ -6,7 +6,6 @@ SET CONSTRAINTS ALL DEFERRED;
 -- populate sailor
 INSERT INTO sailor
 VALUES
-  ('Sailor', 'Test', 'sailor.test@mail.com'),
   -- senior
   ('Sailor 1', 'Senior', 'sailor.1.senior@mail.com'),
   ('Sailor 2', 'Senior', 'sailor.2.senior@mail.com'),
@@ -31,5 +30,3 @@ VALUES
   ('sailor.5.senior@mail.com');
 
 COMMIT;
-
-UPDATE junior SET email = 'sailor.test@mail.com' WHERE email = 'sailor.3.junior@mail.com';

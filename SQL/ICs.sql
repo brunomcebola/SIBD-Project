@@ -7,8 +7,6 @@
 -- Rui Abrantes - 93176
 --
 ---------------------- DATABASE IC-1 ------------------------
--- 
--- TODO: update
 --
 -- DROP TRIGGERS
 --

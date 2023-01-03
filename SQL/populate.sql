@@ -51,13 +51,15 @@ VALUES
   ('Sailor 5', 'Senior', 'sailor.5.senior@mail.com'),
   -- junior
   ('Sailor 3', 'Junior', 'sailor.3.junior@mail.com'),
-  ('Sailor 4', 'Junior', 'sailor.4.junior@mail.com');
+  ('Sailor 4', 'Junior', 'sailor.4.junior@mail.com'),
+  ('Sailor 6', 'Junior', 'sailor.6.junior@mail.com');
 
 -- populate junior
 INSERT INTO junior
 VALUES
   ('sailor.3.junior@mail.com'),
-  ('sailor.4.junior@mail.com');
+  ('sailor.4.junior@mail.com'),
+  ('sailor.6.junior@mail.com');
 
 -- populate senior
 INSERT INTO senior
