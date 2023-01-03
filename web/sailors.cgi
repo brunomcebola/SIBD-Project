@@ -70,7 +70,8 @@ connection = None
 query_string = parse_qs(os.environ.get('QUERY_STRING'))
 
 page = int(query_string['page'][0]) if 'page' in query_string else 1
-perPage = int(query_string['perPage'][0]) if 'perPage' in query_string else 5
+# perPage = int(query_string['perPage'][0]) if 'perPage' in query_string else 5
+perPage = 5
 
 try:
     # Creating connection
@@ -142,12 +143,10 @@ except Exception as e:
 finally:
     if connection is not None:
         connection.close()
+        
 print("""
             </div>
         </div>
-        <script>
-            
-        </script>
     </body>
 </html>
 """)
